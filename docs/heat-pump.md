@@ -16,9 +16,10 @@ has not yet bench tested it or run it on a heat pump. The enclosure is
 test printed once. The carrier fit and the carrier catches held with no
 cracking. The first lid did not fit, because its tab missed the notch; the
 model is fixed and not yet reprinted. The ESP32 fit, the snap lid, the tie
-point and the space inside the heat pump unit are untested. Nothing in this
-guide is a field report. The firmware component is third-party and its
-authors tested it; see [Supported units](#supported-units).
+point and the space inside the heat pump unit are untested. The room
+thermometer feed compiles but has not run on a heat pump. Nothing in this
+guide is a field report. The firmware component is third-party and its authors
+tested it; see [Supported units](#supported-units).
 
 This guide is for someone who can follow a wiring list and use a multimeter.
 You do not need to have used ESPHome or KiCad before. Read
@@ -330,6 +331,44 @@ terminal:
 ```sh
 .venv/bin/esphome run heatpump-livingroom.yaml --device OTA
 ```
+
+## Use a room thermometer
+
+The heat pump regulates to its own sensor, which sits in the indoor unit and
+can read warmer or cooler than the room. The firmware can take a temperature
+from Home Assistant instead, so the number on the remote means the temperature
+a room thermometer reads. Home Assistant only supplies a reading. Mode,
+setpoint, fan and power stay with the remote.
+
+1. In Home Assistant, create a template sensor helper per room (Settings,
+   Devices & services, Helpers) named after the entity in the room's device
+   file, for example `sensor.heatpump_livingroom_room_temperature`. Set its
+   unit to °F and its device class to temperature. Use this state template,
+   with your thermometer's entity and the longest gap you accept in hours:
+
+   ```jinja
+   {% set s = states.sensor.living_room_temperature %}
+   {{ s.state if s and now() - s.last_reported < timedelta(hours=3) else none }}
+   ```
+
+2. Flash the device again over Wi-Fi, as in
+   [Tune the update interval](#tune-the-update-interval).
+
+The helper reports a non-numeric state when the thermometer is unavailable or
+stops reporting, and the device sends nothing for such a state or for a
+reading outside 1 to 40 °C. The unit returns to its own sensor, so the remote
+keeps working, in these cases:
+
+- The thermometer is offline or its reading is out of range: the helper is
+  non-numeric, the device stops sending and the firmware times out after 10
+  minutes.
+- Home Assistant or Wi-Fi is down: the device stops sending, with the same
+  timeout.
+- The ESP32 is down: the unit receives no updates and reverts by itself
+  (a firmware source comment says so; unverified on hardware).
+
+Home Assistant is assumed to use °F. For °C, change `(x - 32) * (5.0 / 9.0)`
+to `x` in [`packages/heatpump.yaml`](../packages/heatpump.yaml).
 
 ## Troubleshooting
 

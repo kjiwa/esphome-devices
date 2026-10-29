@@ -5,3 +5,4 @@ packages:
     vars:
       name: heatpump-masterbedroom
       area: Master Bedroom
+      room_temperature_entity: sensor.heatpump_masterbedroom_room_temperature
