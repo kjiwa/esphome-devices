@@ -75,7 +75,8 @@ render the box to read it.
 
 The Customizer parameters are grouped as Part, ESP32, Carrier, Wiring, Box,
 Lid and Preview. Sizes marked "drawing" or "KiCad" come from those sources;
-sizes marked "check on a test print" are unverified.
+sizes marked "check on a test print" are unverified. Constants marked
+"Illustrative" only shape the renders.
 
 - `make enclosure` writes `build/enclosure/heatpump-bridge-box.stl` and
   `build/enclosure/heatpump-bridge-lid.stl`.

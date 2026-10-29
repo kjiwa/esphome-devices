@@ -49,7 +49,7 @@ Top_Clearance = 0.5; // Gap between the tallest ESP32 part and the lid
 /* [Preview] */
 Show_Lid = false; // Show the lid on the assembly
 Show_Section = false; // Cut the assembly lengthwise
-Show_Wiring = true; // Show the keep-out volumes (hidden when exploded)
+Show_Wiring = true; // Show the keep-out volumes, and a translucent lid (hidden when exploded)
 Explode = 0; // Distance between exploded layers in mm (0 to disable)
 
 /* [Hidden] */
@@ -61,20 +61,20 @@ Header_Offset = 1.27; // KiCad: pin row offset from the carrier centreline
 Edge_Margin = 1.69; // KiCad: pad-free margin along the carrier long edge nearest the pin rows
 J_ESP32_Hole = 5.715; // KiCad: J_ESP32_1 hole row from its carrier end
 J_CN105_Hole = 9.525; // KiCad: J_CN105_1 hole row from its carrier end
-Nub_Length = 1;
-Pin_Width = 0.64;
-Wire_Radius = 0.35;
+Nub_Length = 1; // Illustrative: nub length, not checked against a print
+Pin_Width = 0.64; // Illustrative: render only
+Wire_Radius = 0.35; // Illustrative: render only
 Cable_Fan = 4; // Length over which the CN105 wires gather behind their housings
-Module_Width = 13.2;
-Module_Base = 0.8;
-USB_Width = 7.5;
-USB_Length = 5.4;
-USB_Height = 2.6;
-Converter_Margin = 3.5;
-Converter_Half = 5.1;
-PAP_Width = 10; // illustrative PAP-05V-S housing size
-PAP_Height = 5;
-PAP_Length = 8;
+Module_Width = 13.2; // Illustrative: render only
+Module_Base = 0.8; // Illustrative: render only
+USB_Width = 7.5; // Illustrative: render only
+USB_Length = 5.4; // Illustrative: render only
+USB_Height = 2.6; // Illustrative: render only
+Converter_Margin = 3.5; // Illustrative: render only
+Converter_Half = 5.1; // Illustrative: render only
+PAP_Width = 10; // Illustrative: render only, PAP-05V-S housing size
+PAP_Height = 5; // Illustrative: render only
+PAP_Length = 8; // Illustrative: render only
 Jumpers = [ // [carrier pin, ESP32 row side, ESP32 pin index from the antenna end, color]; illustrative pin choice
   [1, 1, 0, "white"],
   [2, -1, 0, "red"],
@@ -124,6 +124,7 @@ assert(Nub_Height > 0 && Nub_Height < min(ESP32_Thickness, Carrier_Thickness),
 assert(Lid_Clearance > 0 && Top_Clearance > 0, "Lid_Clearance and Top_Clearance must be positive");
 assert(Corner_Radius > Wall_Thickness, "Corner_Radius must exceed Wall_Thickness");
 assert(Explode >= 0, "Explode must be 0 or positive");
+assert(Wire_Bend > 2.5, "Wire_Bend must exceed 2.5 for the rendered jumper routing");
 assert(Lead_Crush > 0 && Lead_Crush < Lead_Height, "Lead_Crush must be between 0 and Lead_Height");
 
 module RoundedRect(x0, x1, y0, y1, r) {
@@ -249,7 +250,7 @@ function EspPinX(index) = ESP32_Length / 2 - Header_Pins * Pitch / 2 + (index + 
 
 function JumperPath(pin, side, index) = let(
   k = pin - 1, y = PinY(pin), row_y = side * Row_Y, x = EspPinX(index),
-  bend_x = Plug_ESP32_X - 1 - 0.8 * k, low = -17.9 - 0.85 * max(k - 1, 0)
+  bend_x = Plug_ESP32_X - 1 - 0.8 * k, low = Dupont_Bottom - 1.4 - (Wire_Bend - 2.5) / 3 * max(k - 1, 0)
 ) [
   [Plug_ESP32_X, y, Pin_Z + Carrier_Lift],
   [bend_x, y, Pin_Z + Carrier_Lift],
