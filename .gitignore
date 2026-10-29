@@ -4,3 +4,4 @@ secrets.yaml
 *.kicad_prl
 *-backups/
 fp-info-cache
+build/
