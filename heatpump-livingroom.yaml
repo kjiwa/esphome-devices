@@ -1,0 +1,7 @@
+---
+packages:
+  heatpump_livingroom: !include
+    file: packages/heatpump.yaml
+    vars:
+      name: heatpump-livingroom
+      area: Living Room

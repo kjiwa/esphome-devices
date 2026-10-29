@@ -1,0 +1,7 @@
+---
+packages:
+  heatpump_masterbedroom: !include
+    file: packages/heatpump.yaml
+    vars:
+      name: heatpump-masterbedroom
+      area: Master Bedroom
