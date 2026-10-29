@@ -36,5 +36,19 @@ jobs:
           cp secrets.example.yaml secrets.yaml
           for f in heatpump-*.yaml acurite-bridge.yaml; do esphome config "$f" > /dev/null; done
 
+  enclosure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Set up OpenSCAD
+        uses: kjiwa/cad-models/.github/actions/setup-openscad@a7af09c48dddf3f412c67942e35aa89ebdcdfd8f
+
+      - name: Check and build the enclosure
+        run: make enclosure-check enclosure
+
   privacy:
     uses: kjiwa/.github/.github/workflows/privacy.yml@main

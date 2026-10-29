@@ -42,11 +42,37 @@ wire and the checks to run before first power-up.
 ## Bill of materials
 
 - **[SparkFun BOB-12009](https://www.sparkfun.com/products/12009) logic level converter**: quantity 1. 4 channels, 5 V to 3.3 V.
-- **Male pin header, 1x5, 2.54 mm**: quantity 2. J_CN105_1 and J_ESP32_1.
+- **Right-angle male pin header, 1x5, 2.54 mm**: quantity 2. J_CN105_1 and J_ESP32_1.
 
 The ESP32 board, cables and Dupont jumpers are not part of this board. The
 full parts list is in the [heat pump guide](../../docs/heat-pump.md#parts). A
 different converter fits only if its pads match the footprint (unverified).
+
+## Enclosure
+
+[`enclosure/heatpump-bridge-enclosure.scad`](enclosure/heatpump-bridge-enclosure.scad)
+is a printable two-part box and lid in plain OpenSCAD, with Customizer
+parameters. The ESP32 rests parts-up on two rails between its header rows.
+The carrier board hangs between the same rails on ledges, with the
+right-angle headers on the converter side pointing off the board ends. Every
+Dupont housing stays inside. Only the CN105 lead leaves, through a notch in
+one end wall that the lid tab clamps. There is no micro-USB opening: open the
+lid to flash, and never with CN105 connected (see
+[the power rule](../../docs/heat-pump.md#the-power-rule)).
+
+Status: untested. It has never been printed, and the space in the heat pump
+unit is unmeasured. The default box is 60.92 x 29.0 x 28.2 mm
+(length x width x height: outer size), about 29.8 mm tall with the lid.
+
+- Material: PETG or ASA. Behavior near the unit's coil is unverified.
+- Print orientation: box floor down, lid plate down.
+- Assembly order: wire both boards, drop the carrier in, then the ESP32,
+  thread the lead into the notch, press the lid on.
+
+`make enclosure` writes `build/enclosure/heatpump-bridge-box.stl` and
+`build/enclosure/heatpump-bridge-lid.stl`. `make enclosure-check` runs the
+interference checks; it needs OpenSCAD, and the `OPENSCAD` variable
+overrides the binary.
 
 ## Fabrication files
 

@@ -54,7 +54,7 @@ technician. Connecting third-party hardware may affect your warranty
 - **[SparkFun ESP32-C3 Mini Development Board, WRL-18036](https://www.sparkfun.com/products/18036)**: quantity 1. SparkFun's product page links Espressif's ESP32-C3-DevKitM-1 V1 documentation for this board, including the [Espressif DevKitM-1 user guide](https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32c3/esp32-c3-devkitm-1/user_guide.html) and schematic. Espressif's published schematic wires a CP2102N USB-to-serial chip to GPIO20 and GPIO21 (UART0), which is why the log appears over micro-USB. Verified against the published schematic, not against the physical board.
 - **Carrier board**: quantity 1. Order from a PCB fab; see below.
 - **[SparkFun Logic Level Converter, BOB-12009](https://www.sparkfun.com/products/12009)**: quantity 1. Converts 4 channels between 5 V and 3.3 V.
-- **Male pin header, 1x5, 2.54 mm pitch**: quantity 2. One on each side of the carrier board.
+- **Right-angle male pin header, 1x5, 2.54 mm pitch**: quantity 2. One on each side of the carrier board.
 - **JST PAP-05V-S housing with crimp terminals, or a pre-made 5-wire pigtail**: quantity 1. Plugs into CN105.
 - **Dupont jumper wires, female to female**: quantity 5. Carrier board to ESP32.
 
@@ -82,8 +82,9 @@ contents and the design files.
 Top of the carrier board. Pin 1 of each header is the square pad at the
 bottom.
 
-1. Solder one 1x5 male header into each of J_ESP32_1 (left in the picture)
-   and J_CN105_1 (right).
+1. Solder one right-angle 1x5 male header into each of J_ESP32_1 (left in
+   the picture) and J_CN105_1 (right), on the converter side of the board
+   with the pins pointing off the board ends.
 2. Solder the BOB-12009 converter into the 12-hole footprint labelled
    U_3V3_5V_1. Its HV pins face J_CN105_1 and its LV pins face J_ESP32_1.
    Compare the converter's own pin markings with the HV1 to HV4 and LV1 to
@@ -303,4 +304,6 @@ These are external projects. This repository only configures and wires them.
 
 - [Board README](../hardware/heatpump-bridge/README.md): files, fabrication
   and rebuild.
+- [Enclosure](../hardware/heatpump-bridge/README.md#enclosure): printable
+  box and lid (untested).
 - [AcuRite bridge](acurite.md)
