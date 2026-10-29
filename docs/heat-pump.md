@@ -12,9 +12,11 @@ Assistant over Wi-Fi.
 ## Status and audience
 
 Status: assembled, bench test pending. The author has built the hardware but
-has not yet bench tested it or run it on a heat pump. Nothing in this guide
-is a field report. The firmware component is third-party and its authors
-tested it; see [Supported units](#supported-units).
+has not yet bench tested it or run it on a heat pump. The enclosure is
+designed but has never been printed, and the space for it inside the heat
+pump unit is unmeasured. Nothing in this guide is a field report. The
+firmware component is third-party and its authors tested it; see
+[Supported units](#supported-units).
 
 This guide is for someone who can follow a wiring list and use a multimeter.
 You do not need to have used ESPHome or KiCad before. Read
@@ -57,6 +59,8 @@ technician. Connecting third-party hardware may affect your warranty
 - **Right-angle male pin header, 1x5, 2.54 mm pitch**: quantity 2. One on each side of the carrier board.
 - **JST PAP-05V-S housing with crimp terminals, or a pre-made 5-wire pigtail**: quantity 1. Plugs into CN105.
 - **Dupont jumper wires, female to female**: quantity 5. Carrier board to ESP32.
+- **Printed box and lid**: quantity 1 of each. Holds both boards; see
+  [Fit the enclosure](#fit-the-enclosure).
 
 Quantities are per bridge. The Dupont pitch is 2.54 mm. The CN105 housing is
 2.0 mm pitch, so Dupont plastic bodies do not fit the unit end.
@@ -92,8 +96,10 @@ bottom.
 3. Build the CN105 cable: crimp five wires into the PAP-05V-S housing and
    fit a female Dupont end on each wire, or use a pre-made pigtail with
    Dupont ends.
-4. Build the ESP32 cable from five Dupont jumpers. The author re-housed
-   the jumper ends so they plug in as one block; this is optional.
+4. Build the ESP32 cable from five Dupont jumpers. Both ends end up inside
+   the box, so they only need to reach from the carrier board to the ESP32.
+   The author re-housed the jumper ends so they plug in as one block; this
+   is optional.
 
 ### Wiring list
 
@@ -114,7 +120,8 @@ J_CN105_1, the heat pump side. Wire it to the CN105 cable in this order:
 4. TX: the heat pump's transmit line. It ends at ESP32 GPIO4.
 5. RX: the heat pump's receive line. It ends at ESP32 GPIO5.
 
-J_ESP32_1, the ESP32 side. Wire it to the ESP32 board in this order:
+J_ESP32_1, the ESP32 side. Wire it to the ESP32 board with the jumpers in
+this order:
 
 1. 5V: to the ESP32 `5V` pin. This is the bridge's only power input.
 2. GND: to an ESP32 `GND` pin.
@@ -186,6 +193,8 @@ mutually exclusive ways to power the board. So:
 
 - Flash over USB with CN105 unplugged from the carrier board.
 - Unplug micro-USB before you connect CN105.
+- The closed box has no micro-USB opening. To flash over USB again, open the
+  lid and unplug CN105 first.
 - Update later over Wi-Fi ([OTA](getting-started.md#ota)).
 
 ## Flash the firmware
@@ -197,7 +206,8 @@ mutually exclusive ways to power the board. So:
    copy one file and change its `name` and `area` lines. Every file includes
    [`packages/heatpump.yaml`](../packages/heatpump.yaml), which holds the
    settings that all rooms share.
-3. Connect micro-USB to the ESP32 board. CN105 stays unplugged.
+3. Connect micro-USB to the ESP32 board, outside the box. CN105 stays
+   unplugged.
 4. Run this in a laptop terminal, from the repository root:
 
    ```sh
@@ -214,11 +224,55 @@ The log appears over micro-USB because the config sets the logger to
 UART0. The serial speed to the heat pump is 2400 baud: the
 [baud rate](getting-started.md#baud-rate) the CN105 port uses.
 
+## Fit the enclosure
+
+Status: designed, never printed. The space inside the heat pump unit is
+unmeasured, so check that the box fits before you print it.
+
+<img src="images/enclosure-closed.png" alt="Render of the closed box: a plain lid-topped box with a notch in one end wall, where four colored wires leave and end in a cream-colored connector housing" width="420">
+
+The closed box. A render of the OpenSCAD model, not a photo. The wires and
+connector housing are simplified and the routing is illustrative.
+
+<img src="images/enclosure-open.png" alt="Render of the box with the lid off: a green ESP32 board with a gray module on top, the carrier board below it, colored jumper wires looping at one end and the CN105 lead leaving through the notch at the other" width="420">
+
+The box with the lid off. A render, not a photo. The ESP32 is a simplified
+block shape and the wire routing is illustrative.
+
+<img src="images/enclosure-exploded.png" alt="Exploded render, top to bottom: the lid, the ESP32, the carrier board with its blue converter and black headers, and the empty box with the CN105 lead leaving through the notch" width="420">
+
+The parts pulled apart. A render, not a photo.
+
+The box holds the carrier board, the ESP32 and the five jumpers. Only the
+CN105 lead leaves it, through the notch.
+
+### Print the box and lid
+
+1. Generate the two STL files by following the
+   [board README](../hardware/heatpump-bridge/README.md#enclosure). An STL
+   file is the 3D model format a slicer reads. A slicer is the program that
+   turns the model into instructions for a 3D printer. The same README shows
+   how to render the model to read the box's outer size.
+2. Print in PETG or ASA. How either behaves near the unit's coil is
+   unverified.
+3. Print the box floor down and the lid plate down.
+
+### Assemble the enclosure
+
+1. Flash the ESP32 before it goes in the box, as in
+   [Flash the firmware](#flash-the-firmware), with CN105 unplugged.
+2. Plug the five jumpers into J_ESP32_1 and onto the ESP32 pins, as in the
+   [wiring list](#wiring-list). Plug the CN105 lead into J_CN105_1.
+3. Set the carrier board in the box, converter side up.
+4. Rest the ESP32 above it, parts up.
+5. Lay the CN105 lead in the notch, with its housing outside the box.
+6. Press the lid on. Its tab clamps the lead in the notch.
+
 ## Install and check it worked
 
 1. Turn the indoor unit off at the breaker.
-2. Open the panel. Plug the CN105 cable into the unit's CN105 header, and
-   plug the carrier board into the ESP32 with the ESP32 cable.
+2. Open the panel. Plug the lead from the closed box into the unit's CN105
+   header.
 3. Close the panel, then restore power.
 4. Wait for the device to come online in Home Assistant.
 
@@ -304,6 +358,6 @@ These are external projects. This repository only configures and wires them.
 
 - [Board README](../hardware/heatpump-bridge/README.md): files, fabrication
   and rebuild.
-- [Enclosure](../hardware/heatpump-bridge/README.md#enclosure): printable
-  box and lid (untested).
+- [Enclosure design notes](../hardware/heatpump-bridge/README.md#enclosure):
+  layout, parameters and the build commands.
 - [AcuRite bridge](acurite.md)

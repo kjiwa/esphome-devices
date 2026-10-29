@@ -1,11 +1,13 @@
-# Heat pump bridge carrier board
+# Heat pump bridge hardware
 
-A small circuit board that joins a Mitsubishi heat pump's
+The hardware for the heat pump bridge: a small carrier board and a printable
+enclosure. The carrier board joins a Mitsubishi heat pump's
 [CN105](../../docs/getting-started.md#cn105) port to an ESP32 board. It holds a
 5 V to 3.3 V
 [logic-level converter](../../docs/getting-started.md#logic-level-converter)
-and two five-pin headers. The
-[heat pump guide](../../docs/heat-pump.md) explains how to build and use it.
+and two five-pin headers. The enclosure is a box and lid that hold the carrier
+board and the ESP32. The [heat pump guide](../../docs/heat-pump.md) explains
+how to build, print and use them.
 
 <img src="../../docs/images/heatpump-board-top.png" alt="Top of the carrier board: header J_ESP32_1 on the left, the converter footprint in the middle and header J_CN105_1 on the right, with circled 1 and 5 beside the CN105 header" width="420">
 
@@ -56,23 +58,33 @@ parameters. The ESP32 rests parts-up on two rails between its header rows.
 The carrier board hangs between the same rails on ledges, with the
 right-angle headers on the converter side pointing off the board ends. Every
 Dupont housing stays inside. Only the CN105 lead leaves, through a notch in
-one end wall that the lid tab clamps. There is no micro-USB opening: open the
-lid to flash, and never with CN105 connected (see
-[the power rule](../../docs/heat-pump.md#the-power-rule)).
+one end wall that the lid tab clamps. There is no micro-USB opening, so the
+lid comes off to flash. The [heat pump guide](../../docs/heat-pump.md#fit-the-enclosure)
+covers printing and assembly.
 
-Status: untested. It has never been printed, and the space in the heat pump
-unit is unmeasured. Every size is a parameter, and the outer size follows from
-them: render the box to read it.
+<img src="../../docs/images/enclosure-section.png" alt="Lengthwise cut through the box: the ESP32 above the carrier board and its blue converter, the CN105 lead leaving through the notch, and translucent orange volumes marking space kept free for the jumpers and the lead" width="420">
 
-- Material: PETG or ASA. Behavior near the unit's coil is unverified.
-- Print orientation: box floor down, lid plate down.
-- Assembly order: wire both boards, drop the carrier in, then the ESP32,
-  thread the lead into the notch, press the lid on.
+Lengthwise cut of the model. A render, not a photo. The ESP32 and the
+PAP-05V-S housing are simplified blocks and the wire routing is illustrative.
+The translucent orange volumes are space reserved for the jumpers and the
+CN105 lead.
 
-`make enclosure` writes `build/enclosure/heatpump-bridge-box.stl` and
-`build/enclosure/heatpump-bridge-lid.stl`. `make enclosure-check` runs the
-interference checks; it needs OpenSCAD, and the `OPENSCAD` variable
-overrides the binary.
+Status: designed, never printed, and the space in the heat pump unit is
+unmeasured. Every size is a parameter, and the outer size follows from them:
+render the box to read it.
+
+The Customizer parameters are grouped as Part, ESP32, Carrier, Wiring, Box,
+Lid and Preview. Sizes marked "drawing" or "KiCad" come from those sources;
+sizes marked "check on a test print" are unverified. Constants marked
+"Illustrative" only shape the renders.
+
+- `make enclosure` writes `build/enclosure/heatpump-bridge-box.stl` and
+  `build/enclosure/heatpump-bridge-lid.stl`.
+- `make enclosure-check` runs the interference checks.
+- `make enclosure-images` rebuilds the four enclosure renders in
+  `docs/images/`.
+
+All three need OpenSCAD; the `OPENSCAD` variable overrides the binary.
 
 ## Fabrication files
 
@@ -107,14 +119,17 @@ files point to them.
 
 ## Regenerate the generated files
 
-The Makefile in the repository root rebuilds the images and the fabrication
-zip from the KiCad files. It needs KiCad 10's `kicad-cli` and `zip`. The
-`KICAD_CLI` variable defaults to the macOS install path; override it
-elsewhere. Run these in a laptop terminal, from the repository root:
+The Makefile in the repository root rebuilds the images, the fabrication
+zip and the enclosure files. The KiCad targets need KiCad 10's `kicad-cli` and
+`zip`; the `KICAD_CLI` variable defaults to the macOS install path, so
+override it elsewhere. The enclosure targets need OpenSCAD. Run these in a
+laptop terminal, from the repository root:
 
 ```sh
 make fab
 make images
+make enclosure
+make enclosure-images
 make check
 ```
 
@@ -122,8 +137,10 @@ make check
   `fabrication/heatpump-bridge-gerbers.zip`.
 - `make images` rebuilds the two board renders and the schematic SVG in
   `docs/images/`.
+- `make enclosure` and `make enclosure-images` are described under
+  [Enclosure](#enclosure).
 - `make check` rebuilds the schematic SVG and Gerbers in a temporary folder
-  and compares them with the committed files.
+  and compares them with the committed files, then runs `make enclosure-check`.
 
 On Linux, for example, pass the command name:
 
