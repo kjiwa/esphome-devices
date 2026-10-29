@@ -1,80 +1,54 @@
 # esphome-devices
-ESPHome device configurations and KiCad boards for Home Assistant.
 
-## Setup
-Requires Python 3.12 to 3.14 (ESPHome 2026.10 does not support 3.15).
+[ESPHome](docs/getting-started.md#esphome) configurations and a KiCad board
+for devices that report to
+[Home Assistant](docs/getting-started.md#home-assistant). Everything needed to
+connect a Mitsubishi heat pump, or to run an AcuRite 433 MHz sensor bridge, is
+in this repository or linked from it.
 
-```sh
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-cp secrets.example.yaml secrets.yaml
-```
+<img src="docs/images/heatpump-system.svg" alt="Block diagram: a heat pump CN105 port connects through a cable and a carrier board to an ESP32, which reaches Home Assistant over Wi-Fi" width="420">
 
-Validate, compile, upload and watch a device:
-
-```sh
-.venv/bin/esphome config heatpump-livingroom.yaml
-.venv/bin/esphome compile heatpump-livingroom.yaml
-.venv/bin/esphome upload heatpump-livingroom.yaml
-.venv/bin/esphome logs heatpump-livingroom.yaml
-```
-
-## Secrets
-`secrets.yaml` is git-ignored. Fill each value in `secrets.yaml`:
-
-| Key | Generate with |
-| --- | --- |
-| `wifi_ssid`, `wifi_password` | Your network |
-| `heatpump_api_encryption_key` | `head -c 32 /dev/urandom \| base64 \| tr '+/' 'ab'` |
-| `heatpump_ota_password` | `head /dev/urandom \| tr -dc A-Za-z0-9 \| head -c 20` |
-| `heatpump_ap_password` | `head /dev/urandom \| tr -dc A-Za-z0-9 \| head -c 20` |
-| `acurite_api_encryption_key` | `head -c 32 /dev/urandom \| base64 \| tr '+/' 'ab'` |
-| `acurite_ota_password`, `acurite_ap_password` | `head /dev/urandom \| tr -dc A-Za-z0-9 \| head -c 20` |
-
-To rotate a value, regenerate it and re-flash over OTA.
+The heat pump bridge: the unit's [CN105](docs/getting-started.md#cn105) port,
+a carrier board, an ESP32 and Wi-Fi to Home Assistant.
 
 ## Devices
-| File | Device | Area |
-| --- | --- | --- |
-| `heatpump-livingroom.yaml` | Mitsubishi heat pump bridge | Living Room |
-| `heatpump-kidsroom.yaml` | Mitsubishi heat pump bridge | Kid's Room |
-| `heatpump-masterbedroom.yaml` | Mitsubishi heat pump bridge | Master Bedroom |
-| `acurite-bridge.yaml` | AcuRite 433 MHz sensor bridge (LILYGO T3 V1.6.1) | Kitchen |
 
-The heat pump files include `packages/heatpump.yaml` and set `name` and `area`. The firmware uses
-[echavet/MitsubishiCN105ESPHome](https://github.com/echavet/MitsubishiCN105ESPHome).
+- **Mitsubishi heat pump bridge**: assembled, bench test pending. [Heat pump bridge](docs/heat-pump.md)
+- **AcuRite 433 MHz sensor bridge**: in daily use; this repository's config not yet flashed to the live unit. [AcuRite bridge](docs/acurite.md)
 
-## Heat pump bridge
-The CN105 port is 5 V serial. A SparkFun BOB-12009 level converter on the carrier board sits
-between it and the ESP32-C3 (SparkFun WRL-18036, an ESP32-C3-DevKitM-1 V1).
-See the [DevKitM-1 user guide](https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32c3/esp32-c3-devkitm-1/user_guide.html).
+## Quick start
 
-| CN105 pin | Signal | Wire | Carrier J_CN105_1 | Carrier J_ESP32_1 | ESP32-C3 |
-| --- | --- | --- | --- | --- | --- |
-| 1 | 12V | | 1 | | |
-| 2 | GND | Red | 2 | 2 | GND |
-| 3 | 5V | White | 3 | 1 | 5V |
-| 4 | TX | Yellow | 4 | 4 (RX) | GPIO4 (RX) |
-| 5 | RX | Orange | 5 | 5 (TX) | GPIO5 (TX) |
+1. Read [Getting started](docs/getting-started.md): install the tools, then
+   create your `secrets.yaml`.
+2. Open the guide for your device: [heat pump](docs/heat-pump.md) or
+   [AcuRite](docs/acurite.md). Build the hardware and check it before power.
+3. Flash the board and add it to Home Assistant, as the guide describes.
 
-J_ESP32_1 pin 3 carries 3V3 from the ESP32 to the converter. Pins J_ESP32_1 4 and 5 go through
-the converter to J_CN105_1 pins 4 and 5.
+## Repository map
 
-GPIO20 and GPIO21 are not used: they are UART0, shared with the USB-UART bridge and the boot log.
-Logs over micro-USB use `logger: hardware_uart: UART0`.
+- `heatpump-*.yaml`: One ESPHome file per heat pump (living room, kid's room, master bedroom).
+- `packages/heatpump.yaml`: Settings shared by every heat pump file.
+- `acurite-bridge.yaml`: The AcuRite bridge.
+- `secrets.example.yaml`: Template for the git-ignored `secrets.yaml`.
+- `docs/`: The guides and their images.
+- `hardware/heatpump-bridge/`: KiCad project, [board README](hardware/heatpump-bridge/README.md) and fabrication zip.
+- `Makefile`: `make images`, `make fab`, `make check` for the generated files.
+- `requirements.txt`: Pins the ESPHome version.
 
-### Cables
-- CN105 to J_CN105_1: JST PAP-05V-S housing (2.0 mm pitch) to Dupont lead. Pin 1 (12V) goes on the
-  square pad marked "1". Check continuity with a meter before the first power-up.
-- J_ESP32_1 to the ESP32: female-to-female Dupont jumpers, re-housed.
+## Credits
 
-### Power
-The bridge draws power from CN105 through the ESP32 5V pin. Never connect micro-USB while the
-bridge is connected to CN105: micro-USB, 5V and 3V3 are mutually exclusive power sources.
-Flash over USB with CN105 disconnected, then use OTA.
+These are external projects; this repository configures and wires them.
 
-### Tuning
-Set `update_interval` in `packages/heatpump.yaml` from the `Cycle ended in` lines in the logs.
+- Heat pump firmware: [echavet/MitsubishiCN105ESPHome](https://github.com/echavet/MitsubishiCN105ESPHome)
+  (BSD 2-Clause).
+- AcuRite decoder: [swoboda1337/acurite-esphome](https://github.com/swoboda1337/acurite-esphome)
+  (no license file, so its terms are unstated).
+- Heat pump ESP32 board: [Espressif ESP32-C3-DevKitM-1](https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32c3/esp32-c3-devkitm-1/user_guide.html),
+  sold by [SparkFun](https://www.sparkfun.com/products/18036) as WRL-18036. SparkFun also makes the
+  [BOB-12009 level converter](https://www.sparkfun.com/products/12009).
+- AcuRite board: [LILYGO](https://github.com/Xinyuan-LilyGO/LilyGo-LoRa-Series) T3 V1.6.1.
 
-## Hardware
-`hardware/heatpump-bridge` holds the KiCad 10.0 project for the carrier board: a SparkFun BOB-12009 level converter and two 1x5 headers. The `BOB-12009` symbol and footprint are project-local. Everything under `hardware/` is MIT licensed.
+## License
+
+MIT. See [LICENSE](LICENSE). The licenses of the external projects above
+apply to them, not to this repository.

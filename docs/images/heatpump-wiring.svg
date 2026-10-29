@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 668" width="100%" role="img" aria-labelledby="t d" font-family="Helvetica, Arial, sans-serif">
+<title id="t">Heat pump bridge wiring</title>
+<desc id="d">Pins 1 to 5 of the heat pump CN105 port and of header J_CN105_1 are 12V (not connected), GND, 5V, TX, RX. Pins GND, 5V (HV), TX and RX enter the 5 V side of the BOB-12009 level converter. On its 3.3 V side, header J_ESP32_1 pins 1 to 5 are 5V, GND, 3V3 (LV), RX, TX and go to ESP32-C3 pins 5V0, GND, 3V3, GPIO4 (RX) and GPIO5 (TX). The 5V net also runs from J_CN105_1 pin 3 straight to J_ESP32_1 pin 1, outside the converter. TX and RX cross: the heat pump TX goes to ESP32 RX.</desc>
+<rect x="0" y="0" width="420" height="668" fill="#ffffff"/>
+<rect x="4" y="6" width="94" height="62" rx="6" fill="#f2f4f7" stroke="#44546a" stroke-width="2"/>
+<text x="51.0" y="26" font-size="14" text-anchor="middle" font-weight="bold" fill="#111111">CN105 =</text>
+<text x="51.0" y="43" font-size="14" text-anchor="middle" font-weight="bold" fill="#111111">J_CN105_1</text>
+<text x="51.0" y="60" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">pin</text>
+<rect x="322" y="6" width="94" height="62" rx="6" fill="#f2f4f7" stroke="#44546a" stroke-width="2"/>
+<text x="369.0" y="26" font-size="14" text-anchor="middle" font-weight="bold" fill="#111111">J_ESP32_1</text>
+<text x="369.0" y="43" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">pin, then</text>
+<text x="369.0" y="60" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">ESP32-C3 pin</text>
+<rect x="128" y="98" width="82" height="318" rx="6" fill="#fff1e0" stroke="#a63d00" stroke-width="3"/>
+<rect x="210" y="98" width="82" height="318" rx="6" fill="#e3f0fb" stroke="#0b4f8a" stroke-width="3" stroke-dasharray="7 5"/>
+<text x="210" y="90" font-size="14" text-anchor="middle" font-weight="bold" fill="#111111">BOB-12009 level converter</text>
+<text x="169" y="120" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">5 V side</text>
+<text x="251" y="120" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">3.3 V side</text>
+<rect x="4" y="125" width="94" height="44" rx="6" fill="#ffffff" stroke="#44546a" stroke-width="2"/>
+<text x="51.0" y="152" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">1: 12V</text>
+<rect x="322" y="125" width="94" height="44" rx="6" fill="#ffffff" stroke="#44546a" stroke-width="2"/>
+<text x="369.0" y="144" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">1: 5V</text>
+<text x="369.0" y="161" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">&gt; 5V0</text>
+<rect x="4" y="185" width="94" height="44" rx="6" fill="#ffffff" stroke="#44546a" stroke-width="2"/>
+<text x="51.0" y="212" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">2: GND</text>
+<rect x="322" y="185" width="94" height="44" rx="6" fill="#ffffff" stroke="#44546a" stroke-width="2"/>
+<text x="369.0" y="204" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">2: GND</text>
+<text x="369.0" y="221" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">&gt; GND</text>
+<rect x="4" y="245" width="94" height="44" rx="6" fill="#ffffff" stroke="#44546a" stroke-width="2"/>
+<text x="51.0" y="272" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">3: 5V</text>
+<rect x="322" y="245" width="94" height="44" rx="6" fill="#ffffff" stroke="#44546a" stroke-width="2"/>
+<text x="369.0" y="264" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">3: 3V3</text>
+<text x="369.0" y="281" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">&gt; 3V3</text>
+<rect x="4" y="305" width="94" height="44" rx="6" fill="#ffffff" stroke="#44546a" stroke-width="2"/>
+<text x="51.0" y="332" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">4: TX</text>
+<rect x="322" y="305" width="94" height="44" rx="6" fill="#ffffff" stroke="#44546a" stroke-width="2"/>
+<text x="369.0" y="324" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">4: RX</text>
+<text x="369.0" y="341" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">&gt; GPIO4</text>
+<rect x="4" y="365" width="94" height="44" rx="6" fill="#ffffff" stroke="#44546a" stroke-width="2"/>
+<text x="51.0" y="392" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">5: RX</text>
+<rect x="322" y="365" width="94" height="44" rx="6" fill="#ffffff" stroke="#44546a" stroke-width="2"/>
+<text x="369.0" y="384" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">5: TX</text>
+<text x="369.0" y="401" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">&gt; GPIO5</text>
+<text x="136" y="212" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">GND</text>
+<text x="284" y="212" font-size="14" text-anchor="end" font-weight="normal" fill="#111111">GND</text>
+<text x="136" y="272" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">HV</text>
+<text x="284" y="272" font-size="14" text-anchor="end" font-weight="normal" fill="#111111">LV</text>
+<text x="136" y="332" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">HV2</text>
+<text x="284" y="332" font-size="14" text-anchor="end" font-weight="normal" fill="#111111">LV2</text>
+<text x="136" y="392" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">HV1</text>
+<text x="284" y="392" font-size="14" text-anchor="end" font-weight="normal" fill="#111111">LV1</text>
+<path d="M98 147 L112 147" fill="none" stroke="#222222" stroke-width="3"/>
+<path d="M106 139 L118 155" fill="none" stroke="#8a1c1c" stroke-width="3"/>
+<path d="M118 139 L106 155" fill="none" stroke="#8a1c1c" stroke-width="3"/>
+<path d="M98 207 L128 207" fill="none" stroke="#222222" stroke-width="3"/>
+<path d="M292 207 L322 207" fill="none" stroke="#222222" stroke-width="3"/>
+<path d="M98 267 L128 267" fill="none" stroke="#a63d00" stroke-width="3"/>
+<circle cx="113" cy="267" r="5" fill="#a63d00" stroke="#a63d00" stroke-width="1"/>
+<path d="M113 267 L113 245" fill="none" stroke="#a63d00" stroke-width="3"/>
+<circle cx="113" cy="234" r="11" fill="#ffffff" stroke="#a63d00" stroke-width="2"/>
+<text x="113" y="239" font-size="14" text-anchor="middle" font-weight="bold" fill="#111111">A</text>
+<path d="M322 147 L318 147" fill="none" stroke="#a63d00" stroke-width="3"/>
+<circle cx="307" cy="147" r="11" fill="#ffffff" stroke="#a63d00" stroke-width="2"/>
+<text x="307" y="152" font-size="14" text-anchor="middle" font-weight="bold" fill="#111111">A</text>
+<path d="M322 267 L292 267" fill="none" stroke="#0b4f8a" stroke-width="3" stroke-dasharray="7 5"/>
+<polygon points="292,267 303.0,261.0 303.0,273.0" fill="#0b4f8a"/>
+<path d="M98 327 L128 327" fill="none" stroke="#222222" stroke-width="3"/>
+<polygon points="128,327 117.0,333.0 117.0,321.0" fill="#222222"/>
+<path d="M292 327 L322 327" fill="none" stroke="#222222" stroke-width="3"/>
+<polygon points="322,327 311.0,333.0 311.0,321.0" fill="#222222"/>
+<path d="M322 387 L292 387" fill="none" stroke="#222222" stroke-width="3"/>
+<polygon points="292,387 303.0,381.0 303.0,393.0" fill="#222222"/>
+<path d="M128 387 L98 387" fill="none" stroke="#222222" stroke-width="3"/>
+<polygon points="98,387 109.0,381.0 109.0,393.0" fill="#222222"/>
+<circle cx="128" cy="207" r="4" fill="#222222" stroke="#222222" stroke-width="1"/>
+<circle cx="292" cy="207" r="4" fill="#222222" stroke="#222222" stroke-width="1"/>
+<circle cx="128" cy="267" r="4" fill="#222222" stroke="#222222" stroke-width="1"/>
+<circle cx="292" cy="267" r="4" fill="#222222" stroke="#222222" stroke-width="1"/>
+<circle cx="128" cy="327" r="4" fill="#222222" stroke="#222222" stroke-width="1"/>
+<circle cx="292" cy="327" r="4" fill="#222222" stroke="#222222" stroke-width="1"/>
+<circle cx="128" cy="387" r="4" fill="#222222" stroke="#222222" stroke-width="1"/>
+<circle cx="292" cy="387" r="4" fill="#222222" stroke="#222222" stroke-width="1"/>
+<text x="4" y="444" font-size="16" text-anchor="start" font-weight="bold" fill="#111111">Legend</text>
+<path d="M4 466 L44 466" fill="none" stroke="#a63d00" stroke-width="3"/>
+<text x="54" y="471" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">5 V (solid orange)</text>
+<path d="M4 492 L44 492" fill="none" stroke="#0b4f8a" stroke-width="3" stroke-dasharray="7 5"/>
+<text x="54" y="497" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">3.3 V (dashed blue)</text>
+<path d="M4 518 L44 518" fill="none" stroke="#222222" stroke-width="3"/>
+<text x="54" y="523" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">GND and data (arrows: direction)</text>
+<circle cx="24" cy="544" r="11" fill="#ffffff" stroke="#a63d00" stroke-width="2"/>
+<text x="24" y="549" font-size="14" text-anchor="middle" font-weight="bold" fill="#111111">A</text>
+<text x="54" y="549" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">same 5 V wire, joined off-drawing</text>
+<rect x="4" y="566" width="412" height="98" rx="6" fill="#f2f4f7" stroke="#44546a" stroke-width="2"/>
+<text x="14" y="588" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">Pin 1 (square pad) is 12V. It is not connected.</text>
+<text x="14" y="606" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">TX and RX cross: heat pump TX goes to ESP32 RX</text>
+<text x="14" y="624" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">(GPIO4); ESP32 TX (GPIO5) goes to heat pump RX.</text>
+<text x="14" y="642" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">The cable is straight-through: pin n to pin n.</text>
+<text x="14" y="660" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">Unused converter pins: HV3, HV4, LV3, LV4.</text>
+</svg>
