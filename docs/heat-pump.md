@@ -13,10 +13,12 @@ Assistant over Wi-Fi.
 
 Status: assembled, bench test pending. The author has built the hardware but
 has not yet bench tested it or run it on a heat pump. The enclosure is
-designed but has never been printed, and the space for it inside the heat
-pump unit is unmeasured. Nothing in this guide is a field report. The
-firmware component is third-party and its authors tested it; see
-[Supported units](#supported-units).
+test printed once. The carrier fit and the carrier catches held with no
+cracking. The first lid did not fit, because its tab missed the notch; the
+model is fixed and not yet reprinted. The ESP32 fit, the snap lid, the tie
+point and the space inside the heat pump unit are untested. Nothing in this
+guide is a field report. The firmware component is third-party and its
+authors tested it; see [Supported units](#supported-units).
 
 This guide is for someone who can follow a wiring list and use a multimeter.
 You do not need to have used ESPHome or KiCad before. Read
@@ -58,7 +60,10 @@ technician. Connecting third-party hardware may affect your warranty
 - **[SparkFun Logic Level Converter, BOB-12009](https://www.sparkfun.com/products/12009)**: quantity 1. Converts 4 channels between 5 V and 3.3 V.
 - **Right-angle male pin header, 1x5, 2.54 mm pitch**: quantity 2. One on each side of the carrier board.
 - **JST PAP-05V-S housing with crimp terminals, or a pre-made 5-wire pigtail**: quantity 1. Plugs into CN105.
-- **Dupont jumper wires, female to female**: quantity 5. Carrier board to ESP32.
+- **Dupont jumper wires, female to female**: quantity 5, 10 cm. Carrier board to ESP32.
+  The longest route in the model is 71 mm; with about 2 cm for both housings
+  and slack, 10 cm is the shortest common stock that fits. The routing is
+  illustrative, and the author's 40 cm jumpers do not fit in the box.
 - **Printed box and lid**: quantity 1 of each. Holds both boards; see
   [Fit the enclosure](#fit-the-enclosure).
 - **Mini zip tie, 2.5 mm wide**: quantity 1. Ties the CN105 lead to the box.
@@ -97,8 +102,9 @@ bottom.
 3. Build the CN105 cable: crimp five wires into the PAP-05V-S housing and
    fit a female Dupont end on each wire, or use a pre-made pigtail with
    Dupont ends.
-4. Build the ESP32 cable from five Dupont jumpers. Both ends end up inside
-   the box, so they only need to reach from the carrier board to the ESP32.
+4. Build the ESP32 cable from five Dupont jumpers of the length in Parts. Both
+   ends end up inside the box, so they only need to reach from the carrier
+   board to the ESP32.
    The author re-housed the jumper ends so they plug in as one block; this
    is optional.
 
@@ -228,10 +234,11 @@ UART0. The serial speed to the heat pump is 2400 baud: the
 
 ## Fit the enclosure
 
-Status: designed, never printed. The space inside the heat pump unit is
-unmeasured, so check that the box fits before you print it. Nothing holding
-the box together has been tested either: the snap lid, the carrier catches and
-the zip tie point are designed, and a test print has to show they hold.
+Status: test printed once. The carrier fit and the carrier catches held with
+no cracking. The first lid did not fit, because its tab missed the notch; the
+model is fixed and not yet reprinted. The ESP32 fit, the snap lid, the tie
+point and the space inside the heat pump unit are untested, so check that the
+box fits before you print it.
 
 <img src="images/enclosure-closed.png" alt="Render of the closed box: a plain lid-topped box with a notch in one end wall, where four colored wires leave and end in a cream-colored connector housing" width="420">
 

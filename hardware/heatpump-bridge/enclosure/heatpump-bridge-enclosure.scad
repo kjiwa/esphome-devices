@@ -280,13 +280,14 @@ module Lid() {
         offset(delta = -Lid_Clearance) Cavity();
         offset(delta = -Lid_Clearance - Lid_Lip_Thickness) Cavity();
       }
+  // The lid prints plate down, so turning it over mirrors y.
   Block(Cavity_X1, Cavity_X1 + Wall_Thickness,
-    Header_Offset - Lead_Width / 2, Header_Offset + Lead_Width / 2,
+    -Header_Offset - Lead_Width / 2, -Header_Offset + Lead_Width / 2,
     Lid_Thickness, Lid_Thickness + Rim_Z - tab_bottom);
 }
 
 module LidAssembled() {
-  translate([0, 0, Rim_Z + Lid_Thickness]) mirror([0, 0, 1]) Lid();
+  translate([0, 0, Rim_Z + Lid_Thickness]) rotate([180, 0, 0]) Lid();
 }
 
 module Boards() {

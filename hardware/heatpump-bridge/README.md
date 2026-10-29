@@ -78,9 +78,11 @@ PAP-05V-S housing are simplified blocks and the wire routing is illustrative.
 The translucent orange volumes are space reserved for the jumpers and the
 CN105 lead.
 
-Status: designed, never printed, retention untested, and the space in the
-heat pump unit is unmeasured. Every size is a parameter, and the outer size
-follows from them: render the box to read it.
+Status: test printed once. The carrier fit and the carrier catches held. The
+first lid did not fit; the model is fixed, not yet reprinted. The ESP32 fit,
+the snap lid, the tie point and the space in the heat pump unit are untested.
+Every size is a parameter, and the outer size follows from them: render the box
+to read it.
 
 The Customizer parameters are grouped as Part, ESP32, Carrier, Wiring, Box,
 Lid and Preview. Sizes marked "drawing" or "KiCad" come from those sources;
