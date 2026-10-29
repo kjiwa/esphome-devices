@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 648" width="100%" role="img" aria-labelledby="t d" font-family="Helvetica, Arial, sans-serif">
+<title id="t">Heat pump system overview</title>
+<desc id="d">The heat pump CN105 service port connects through a five-wire cable to the carrier board, which connects to the ESP32. The ESP32 reaches Home Assistant over Wi-Fi.</desc>
+<rect x="0" y="0" width="420" height="648" fill="#ffffff"/>
+<rect x="30" y="12" width="360" height="64" rx="6" fill="#f2f4f7" stroke="#44546a" stroke-width="2"/>
+<text x="210" y="40" font-size="18" text-anchor="middle" font-weight="bold" fill="#111111">Heat pump</text>
+<text x="210" y="62" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">CN105 service port</text>
+<path d="M210 78 L210 122" fill="none" stroke="#44546a" stroke-width="3"/>
+<polygon points="210,122 204.0,111.0 216.0,111.0" fill="#44546a"/>
+<text x="224" y="105" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">wired</text>
+<rect x="30" y="124" width="360" height="64" rx="6" fill="#f2f4f7" stroke="#44546a" stroke-width="2"/>
+<text x="210" y="152" font-size="18" text-anchor="middle" font-weight="bold" fill="#111111">5-wire cable</text>
+<text x="210" y="174" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">12V (unused), GND, 5V, TX, RX</text>
+<path d="M210 190 L210 234" fill="none" stroke="#44546a" stroke-width="3"/>
+<polygon points="210,234 204.0,223.0 216.0,223.0" fill="#44546a"/>
+<text x="224" y="217" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">wired</text>
+<rect x="30" y="236" width="360" height="64" rx="6" fill="#fff1e0" stroke="#a63d00" stroke-width="2"/>
+<text x="210" y="264" font-size="18" text-anchor="middle" font-weight="bold" fill="#111111">Carrier board</text>
+<text x="210" y="286" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">5 V to 3.3 V level converter</text>
+<path d="M210 302 L210 346" fill="none" stroke="#44546a" stroke-width="3"/>
+<polygon points="210,346 204.0,335.0 216.0,335.0" fill="#44546a"/>
+<text x="224" y="329" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">wired, header pins</text>
+<rect x="30" y="348" width="360" height="64" rx="6" fill="#e3f0fb" stroke="#0b4f8a" stroke-width="2"/>
+<text x="210" y="376" font-size="18" text-anchor="middle" font-weight="bold" fill="#111111">ESP32-C3 DevKitM-1</text>
+<text x="210" y="398" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">runs the ESPHome firmware</text>
+<path d="M210 414 L210 458" fill="none" stroke="#0b4f8a" stroke-width="3" stroke-dasharray="8 6"/>
+<polygon points="210,458 204.0,447.0 216.0,447.0" fill="#0b4f8a"/>
+<text x="224" y="441" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">wireless (dashed)</text>
+<rect x="30" y="460" width="360" height="64" rx="6" fill="#f2f4f7" stroke="#44546a" stroke-width="2"/>
+<text x="210" y="488" font-size="18" text-anchor="middle" font-weight="bold" fill="#111111">Wi-Fi</text>
+<text x="210" y="510" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">wireless link in your home</text>
+<path d="M210 526 L210 570" fill="none" stroke="#0b4f8a" stroke-width="3" stroke-dasharray="8 6"/>
+<polygon points="210,570 204.0,559.0 216.0,559.0" fill="#0b4f8a"/>
+<text x="224" y="553" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">wireless (dashed)</text>
+<rect x="30" y="572" width="360" height="64" rx="6" fill="#f2f4f7" stroke="#44546a" stroke-width="2"/>
+<text x="210" y="600" font-size="18" text-anchor="middle" font-weight="bold" fill="#111111">Home Assistant</text>
+<text x="210" y="622" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">shows and controls the heat pump</text>
+</svg>

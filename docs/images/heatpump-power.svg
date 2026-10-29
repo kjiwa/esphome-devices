@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 560" width="100%" role="img" aria-labelledby="t d" font-family="Helvetica, Arial, sans-serif">
+<title id="t">Power rule: micro-USB or CN105, never both</title>
+<desc id="d">The ESP32 board can be powered from micro-USB or from the heat pump CN105 port through the carrier board, but never both at once. Flash with CN105 unplugged, then unplug micro-USB before connecting CN105.</desc>
+<rect x="0" y="0" width="420" height="560" fill="#ffffff"/>
+<rect x="6" y="10" width="300" height="100" rx="6" fill="#f2f4f7" stroke="#44546a" stroke-width="2"/>
+<text x="156" y="36" font-size="18" text-anchor="middle" font-weight="bold" fill="#111111">Micro-USB</text>
+<text x="156" y="60" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">bench only: flashing</text>
+<text x="156" y="80" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">and reading logs</text>
+<text x="156" y="100" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">cable to your computer</text>
+<rect x="6" y="160" width="300" height="100" rx="6" fill="#fff1e0" stroke="#a63d00" stroke-width="2"/>
+<text x="156" y="186" font-size="18" text-anchor="middle" font-weight="bold" fill="#111111">CN105 cable</text>
+<text x="156" y="210" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">installed: powers the board</text>
+<text x="156" y="230" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">through the 5V pin</text>
+<text x="156" y="250" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">from the heat pump</text>
+<circle cx="60" cy="135" r="20" fill="#fde8e8" stroke="#8a1c1c" stroke-width="4"/>
+<path d="M46 149 L74 121" fill="none" stroke="#8a1c1c" stroke-width="4"/>
+<text x="96" y="130" font-size="16" text-anchor="start" font-weight="bold" fill="#111111">never both</text>
+<text x="96" y="148" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">at the same time</text>
+<rect x="336" y="10" width="78" height="250" rx="6" fill="#e3f0fb" stroke="#0b4f8a" stroke-width="3"/>
+<text x="375" y="130" font-size="14" text-anchor="middle" font-weight="bold" fill="#111111">ESP32-C3</text>
+<text x="375" y="148" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">board</text>
+<path d="M306 60 L330 60" fill="none" stroke="#44546a" stroke-width="3"/>
+<polygon points="330,60 319.0,66.0 319.0,54.0" fill="#44546a"/>
+<path d="M306 210 L330 210" fill="none" stroke="#a63d00" stroke-width="3"/>
+<polygon points="330,210 319.0,216.0 319.0,204.0" fill="#a63d00"/>
+<rect x="6" y="280" width="408" height="112" rx="6" fill="#fde8e8" stroke="#8a1c1c" stroke-width="3"/>
+<text x="210" y="306" font-size="16" text-anchor="middle" font-weight="bold" fill="#111111">Never connect micro-USB</text>
+<text x="210" y="326" font-size="16" text-anchor="middle" font-weight="bold" fill="#111111">and CN105 at the same time.</text>
+<text x="210" y="354" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">Espressif: micro-USB, 5V pin and 3V3 pin</text>
+<text x="210" y="374" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">are mutually exclusive power sources.</text>
+<rect x="6" y="410" width="408" height="140" rx="6" fill="#f2f4f7" stroke="#44546a" stroke-width="2"/>
+<text x="16" y="434" font-size="16" text-anchor="start" font-weight="bold" fill="#111111">To flash on the bench</text>
+<text x="16" y="458" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">1. Unplug CN105 from the carrier board.</text>
+<text x="16" y="480" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">2. Plug in micro-USB and flash.</text>
+<text x="16" y="502" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">3. Unplug micro-USB.</text>
+<text x="16" y="524" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">4. Connect CN105. Later updates: Wi-Fi (OTA).</text>
+</svg>
