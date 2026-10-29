@@ -56,11 +56,20 @@ different converter fits only if its pads match the footprint (unverified).
 is a printable two-part box and lid in plain OpenSCAD, with Customizer
 parameters. The ESP32 rests parts-up on two rails between its header rows.
 The carrier board hangs between the same rails on ledges, with the
-right-angle headers on the converter side pointing off the board ends. Every
-Dupont housing stays inside. Only the CN105 lead leaves, through a notch in
-one end wall that the lid tab clamps. There is no micro-USB opening, so the
-lid comes off to flash. The [heat pump guide](../../docs/heat-pump.md#fit-the-enclosure)
-covers printing and assembly.
+right-angle headers on the converter side pointing off the board ends. Small
+hooks on the rails (carrier catches) reach over the carrier's edges to hold
+it down. Every Dupont housing stays inside. Only the CN105 lead leaves,
+through a notch in one end wall that the lid tab clamps. A tie block outside
+that wall takes a zip tie around the lead. The lid snaps on over bumps on its
+lip. There is no micro-USB opening, so the lid comes off to flash: pry it at
+the slot at the antenna end.
+
+Four parameters set the retention, each marked for checking on a test print
+and each set to 0 to disable its feature: `Snap_Depth` (lid bumps, default
+0.4 mm), `Pry_Width` (pry slot, 6 mm), `Catch_Reach` (carrier catches,
+0.5 mm) and `Tie_Width` (zip tie slot, 3 mm, for a 2.5 mm tie). The
+[heat pump guide](../../docs/heat-pump.md#fit-the-enclosure) covers printing
+and assembly.
 
 <img src="../../docs/images/enclosure-section.png" alt="Lengthwise cut through the box: the ESP32 above the carrier board and its blue converter, the CN105 lead leaving through the notch, and translucent orange volumes marking space kept free for the jumpers and the lead" width="420">
 
@@ -69,9 +78,9 @@ PAP-05V-S housing are simplified blocks and the wire routing is illustrative.
 The translucent orange volumes are space reserved for the jumpers and the
 CN105 lead.
 
-Status: designed, never printed, and the space in the heat pump unit is
-unmeasured. Every size is a parameter, and the outer size follows from them:
-render the box to read it.
+Status: designed, never printed, retention untested, and the space in the
+heat pump unit is unmeasured. Every size is a parameter, and the outer size
+follows from them: render the box to read it.
 
 The Customizer parameters are grouped as Part, ESP32, Carrier, Wiring, Box,
 Lid and Preview. Sizes marked "drawing" or "KiCad" come from those sources;

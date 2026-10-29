@@ -64,9 +64,11 @@ $(ENCLOSURE_BUILD)/heatpump-bridge-%.stl: $(ENCLOSURE_SCAD)
 
 # OpenSCAD prints this and exits 1 when a top-level object is empty, which is how an interference check passes.
 ENCLOSURE_EMPTY := Current top level object is empty.
-ENCLOSURE_EMPTY_CHECKS := box-boards box-keepouts box-detail lid-box lid-boards lid-keepouts lid-detail
-ENCLOSURE_SOLID_CHECKS := lid-lead lead-notch rail-support ledge-support
-ENCLOSURE_SELFTESTS := box-keepouts:Board_Clearance=-0.5 box-detail:Board_Clearance=-0.5 lid-detail:Module_Width=30
+ENCLOSURE_EMPTY_CHECKS := box-boards box-keepouts box-detail lid-box lid-boards lid-keepouts lid-detail tie-hole pry-slot
+ENCLOSURE_SOLID_CHECKS := lid-lead lead-notch rail-support ledge-support lid-snap carrier-catch tie-block
+ENCLOSURE_SELFTESTS := box-keepouts:Board_Clearance=-0.5 box-detail:Board_Clearance=-0.5 lid-detail:Module_Width=30 pry-slot:Pry_Width=0
+ENCLOSURE_EMPTY_SELFTESTS := lid-snap:Snap_Depth=0 carrier-catch:Catch_Reach=0
+ENCLOSURE_FEATURE_OFF := Snap_Depth=0 Tie_Width=0 Catch_Reach=0 Pry_Width=0
 ENCLOSURE_PARTS := box lid assembly
 ENCLOSURE_ASSEMBLY_OPTIONS := Explode=18 Show_Lid=true Show_Section=true Show_Wiring=false
 
@@ -92,6 +94,11 @@ enclosure-check:
 	  expect_solid -D "Check=\"$$name\"" -D "$$option" $(ENCLOSURE_CHECKS) || fail "self-test: $$name with $$option should be solid"; \
 	  echo "enclosure-check: ok self-test $$name ($$option)"; \
 	done; \
+	for test in $(ENCLOSURE_EMPTY_SELFTESTS); do \
+	  name="$${test%%:*}"; option="$${test#*:}"; \
+	  expect_empty -D "Check=\"$$name\"" -D "$$option" $(ENCLOSURE_CHECKS) || fail "self-test: $$name with $$option should be empty"; \
+	  echo "enclosure-check: ok self-test $$name ($$option, empty)"; \
+	done; \
 	for name in $(ENCLOSURE_PARTS); do \
 	  expect_solid -D "Part=\"$$name\"" $(ENCLOSURE_SCAD) || fail "$$name should render without warnings"; \
 	  echo "enclosure-check: ok part $$name"; \
@@ -99,6 +106,13 @@ enclosure-check:
 	for option in $(ENCLOSURE_ASSEMBLY_OPTIONS); do \
 	  expect_solid -D 'Part="assembly"' -D "$$option" $(ENCLOSURE_SCAD) || fail "assembly with $$option should render without warnings"; \
 	  echo "enclosure-check: ok assembly $$option"; \
+	done; \
+	for option in $(ENCLOSURE_FEATURE_OFF); do \
+	  for name in box lid; do \
+	    expect_solid -D "Part=\"$$name\"" -D "$$option" $(ENCLOSURE_SCAD) || fail "$$name with $$option should render without warnings"; \
+	  done; \
+	  expect_solid -D 'Part="assembly"' -D Show_Lid=true -D "$$option" $(ENCLOSURE_SCAD) || fail "assembly with $$option should render without warnings"; \
+	  echo "enclosure-check: ok feature off $$option"; \
 	done; \
 	run -D Rail_Thickness=3 $(ENCLOSURE_SCAD); \
 	{ [ "$$status" -ne 0 ] && grep -Fq 'Rails overlap the ESP32 header rows' "$$log"; } || fail "Rail_Thickness=3 should fail its assert"; \

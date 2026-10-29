@@ -61,6 +61,7 @@ technician. Connecting third-party hardware may affect your warranty
 - **Dupont jumper wires, female to female**: quantity 5. Carrier board to ESP32.
 - **Printed box and lid**: quantity 1 of each. Holds both boards; see
   [Fit the enclosure](#fit-the-enclosure).
+- **Mini zip tie, 2.5 mm wide**: quantity 1. Ties the CN105 lead to the box.
 
 Quantities are per bridge. The Dupont pitch is 2.54 mm. The CN105 housing is
 2.0 mm pitch, so Dupont plastic bodies do not fit the unit end.
@@ -194,7 +195,8 @@ mutually exclusive ways to power the board. So:
 - Flash over USB with CN105 unplugged from the carrier board.
 - Unplug micro-USB before you connect CN105.
 - The closed box has no micro-USB opening. To flash over USB again, open the
-  lid and unplug CN105 first.
+  lid and unplug CN105 first. Pry the lid off at the slot at the antenna end
+  with a small flat screwdriver.
 - Update later over Wi-Fi ([OTA](getting-started.md#ota)).
 
 ## Flash the firmware
@@ -227,7 +229,9 @@ UART0. The serial speed to the heat pump is 2400 baud: the
 ## Fit the enclosure
 
 Status: designed, never printed. The space inside the heat pump unit is
-unmeasured, so check that the box fits before you print it.
+unmeasured, so check that the box fits before you print it. Nothing holding
+the box together has been tested either: the snap lid, the carrier catches and
+the zip tie point are designed, and a test print has to show they hold.
 
 <img src="images/enclosure-closed.png" alt="Render of the closed box: a plain lid-topped box with a notch in one end wall, where four colored wires leave and end in a cream-colored connector housing" width="420">
 
@@ -244,7 +248,8 @@ block shape and the wire routing is illustrative.
 The parts pulled apart. A render, not a photo.
 
 The box holds the carrier board, the ESP32 and the five jumpers. Only the
-CN105 lead leaves it, through the notch.
+CN105 lead leaves it, through the notch. The lid snaps on, and a block outside
+the end wall takes a zip tie that holds the lead.
 
 ### Print the box and lid
 
@@ -266,7 +271,10 @@ CN105 lead leaves it, through the notch.
 3. Set the carrier board in the box, converter side up.
 4. Rest the ESP32 above it, parts up.
 5. Lay the CN105 lead in the notch, with its housing outside the box.
-6. Press the lid on. Its tab clamps the lead in the notch.
+6. Snap the lid on. Its tab clamps the lead in the notch.
+7. Thread the zip tie through the slot in the tie block outside the end wall,
+   around the lead, and pull it snug. The lead then holds against a tug
+   instead of pulling on the notch.
 
 ## Install and check it worked
 
