@@ -1,0 +1,7 @@
+---
+packages:
+  heatpump_kidsroom: !include
+    file: packages/heatpump.yaml
+    vars:
+      name: heatpump-kidsroom
+      area: Kid's Room

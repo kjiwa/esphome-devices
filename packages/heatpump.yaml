@@ -1,0 +1,62 @@
+substitutions:
+  friendly_name: Heat Pump
+  board: esp32-c3-devkitm-1
+  uart_rx_pin: GPIO4
+  uart_tx_pin: GPIO5
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name} (${area})
+  area: ${area}
+
+esp32:
+  board: ${board}
+  framework:
+    type: esp-idf
+
+logger:
+  level: INFO
+  hardware_uart: UART0
+
+api:
+  encryption:
+    key: !secret heatpump_api_encryption_key
+
+ota:
+  - platform: esphome
+    password: !secret heatpump_ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  ap:
+    ssid: ${name}
+    password: !secret heatpump_ap_password
+
+captive_portal:
+
+external_components:
+  - source:
+      type: git
+      url: https://github.com/echavet/MitsubishiCN105ESPHome
+      ref: 2026.5.1
+
+uart:
+  id: HP_UART
+  baud_rate: 2400
+  tx_pin: ${uart_tx_pin}
+  rx_pin: ${uart_rx_pin}
+
+# Tune update_interval from the log lines of the form:
+#   [09:48:36][I][CYCLE:052]: 6: Cycle ended in 1.2 seconds (with timeout?: NO)
+# A value between 1s and 4s is recommended; for 1.2 seconds use about 1.5s.
+climate:
+  - platform: cn105
+    id: hp
+    name: None
+    update_interval: 2s
+
+sensor:
+  - platform: uptime
+    name: Uptime
