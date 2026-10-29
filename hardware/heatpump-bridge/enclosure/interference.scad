@@ -19,6 +19,25 @@ module NotchPlane() {
     Lead_Bottom - 1, Lead_Top + 1);
 }
 
+module CarrierRaised() {
+  intersection() {
+    translate([0, 0, Board_Clearance + 0.1])
+      Block(Carrier_X0, Carrier_X0 + Carrier_Length, -Carrier_Half, Carrier_Half, Carrier_Z0, Carrier_Top);
+    Block(Carrier_X0, Carrier_X0 + Carrier_Length, -Carrier_Half, Carrier_Half, Carrier_Top, Carrier_Top + 1);
+  }
+}
+
+module PryProbe() {
+  Block(Cavity_X0 - Wall_Thickness + 0.1, Cavity_X0 - 0.1, -2, 2,
+    Rim_Z + 0.1, Rim_Z + Pry_Height - 0.1);
+}
+
+module TieBar(grow = 0) {
+  Block(Tie_X - (Tie_Strap + grow) / 2, Tie_X + (Tie_Strap + grow) / 2,
+    Header_Offset - Block_Half - 1, Header_Offset + Block_Half + 1,
+    Tie_Z - (Tie_Thickness + grow) / 2, Tie_Z + (Tie_Thickness + grow) / 2);
+}
+
 if (Check == "box-boards") intersection() { BoxSettled(); Boards(); }
 if (Check == "box-keepouts") intersection() { BoxSettled(); KeepOuts(); }
 if (Check == "lid-box") intersection() { LidSettled(); BoxSettled(); }
@@ -30,3 +49,8 @@ if (Check == "ledge-support") intersection() { BoxSettled(); Slab(Carrier_X0, Ca
 if (Check == "box-detail") intersection() { BoxSettled(); Detail(); }
 if (Check == "lid-detail") intersection() { LidSettled(); Detail(Lead = false); }
 if (Check == "lead-notch") intersection() { Detail(); NotchPlane(); }
+if (Check == "lid-snap") intersection() { LidSettled(); translate([0, 0, -Settle]) Box(Grooves = false); }
+if (Check == "carrier-catch") intersection() { BoxSettled(); CarrierRaised(); }
+if (Check == "tie-hole") intersection() { BoxSettled(); TieBar(); }
+if (Check == "tie-block") intersection() { BoxSettled(); TieBar(1); }
+if (Check == "pry-slot") intersection() { LidSettled(); PryProbe(); }
