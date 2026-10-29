@@ -30,23 +30,19 @@ Bottom of the board as rendered by KiCad.
 
 Pin 1 of each header is the square pad.
 
-| Pin | J_CN105_1 (heat pump) | J_ESP32_1 (ESP32) |
-| --- | --- | --- |
-| 1 | 12V, not connected | 5V |
-| 2 | GND | GND |
-| 3 | 5V | 3V3 |
-| 4 | TX | RX |
-| 5 | RX | TX |
+- Pin 1: J_CN105_1 12V, not connected; J_ESP32_1 5V.
+- Pin 2: J_CN105_1 GND; J_ESP32_1 GND.
+- Pin 3: J_CN105_1 5V; J_ESP32_1 3V3.
+- Pin 4: J_CN105_1 TX; J_ESP32_1 RX.
+- Pin 5: J_CN105_1 RX; J_ESP32_1 TX.
 
 The [heat pump guide](../../docs/heat-pump.md#wiring-list) explains each
 wire and the checks to run before first power-up.
 
 ## Bill of materials
 
-| Part | Qty | Notes |
-| --- | --- | --- |
-| [SparkFun BOB-12009](https://www.sparkfun.com/products/12009) logic level converter | 1 | 4 channels, 5 V to 3.3 V. |
-| Male pin header, 1x5, 2.54 mm | 2 | J_CN105_1 and J_ESP32_1. |
+- **[SparkFun BOB-12009](https://www.sparkfun.com/products/12009) logic level converter**: quantity 1. 4 channels, 5 V to 3.3 V.
+- **Male pin header, 1x5, 2.54 mm**: quantity 2. J_CN105_1 and J_ESP32_1.
 
 The ESP32 board, cables and Dupont jumpers are not part of this board. The
 full parts list is in the [heat pump guide](../../docs/heat-pump.md#parts). A
@@ -58,13 +54,11 @@ different converter fits only if its pads match the footprint (unverified).
 holds the files a PCB fabrication service needs. Gerber files are the
 industry-standard format for board layers. The zip contains 9 files:
 
-| File ending | Contents |
-| --- | --- |
-| `F_Cu.gtl`, `B_Cu.gbl` | Top and bottom copper |
-| `F_Mask.gts`, `B_Mask.gbs` | Top and bottom solder mask |
-| `F_Silkscreen.gto`, `B_Silkscreen.gbo` | Top and bottom printed labels |
-| `Edge_Cuts.gm1` | Board outline |
-| `PTH.drl`, `NPTH.drl` | Drill holes: plated and not plated |
+- `F_Cu.gtl`, `B_Cu.gbl`: Top and bottom copper.
+- `F_Mask.gts`, `B_Mask.gbs`: Top and bottom solder mask.
+- `F_Silkscreen.gto`, `B_Silkscreen.gbo`: Top and bottom printed labels.
+- `Edge_Cuts.gm1`: Board outline.
+- `PTH.drl`, `NPTH.drl`: Drill holes: plated and not plated.
 
 Ask the fab for 2 layers and 1.6 mm thickness, and take the board outline
 from the `Edge_Cuts.gm1` file.

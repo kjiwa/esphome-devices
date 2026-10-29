@@ -36,12 +36,10 @@ sensor.
 
 ## Parts
 
-| Part | Qty | Notes |
-| --- | --- | --- |
-| LILYGO T3 V1.6.1 board, 433 MHz variant | 1 | ESP32 plus a radio chip. See the [LILYGO docs](https://github.com/Xinyuan-LilyGO/LilyGo-LoRa-Series/blob/master/docs/en/t3_v161_sx1276/t3_v161_sx1276_hw.md). |
-| 433 MHz antenna | 1 | Connect it before the board runs. |
-| Micro-USB data cable | 1 | For the first flash. |
-| AcuRite 433 MHz sensors | 1 or more | Already installed. |
+- **LILYGO T3 V1.6.1 board, 433 MHz variant**: quantity 1. ESP32 plus a radio chip. See the [LILYGO docs](https://github.com/Xinyuan-LilyGO/LilyGo-LoRa-Series/blob/master/docs/en/t3_v161_sx1276/t3_v161_sx1276_hw.md).
+- **433 MHz antenna**: quantity 1. Connect it before the board runs.
+- **Micro-USB data cable**: quantity 1. For the first flash.
+- **AcuRite 433 MHz sensors**: quantity 1 or more. Already installed.
 
 - Buy the 433 MHz variant. The LILYGO page for this board documents the
   SX1276 module with a 830 to 945 MHz range, which does not cover 433.92 MHz.
@@ -90,11 +88,9 @@ by the four hex digits.
 
 The current file lists three sensors:
 
-| ID | Entities | Names in Home Assistant |
-| --- | --- | --- |
-| `0x0e14` | Temperature, humidity, battery | Mini Freezer |
-| `0x0376` | Temperature, battery | Refrigerator |
-| `0x01ef` | Temperature, battery | Freezer |
+- `0x0e14`: temperature, humidity, battery, named Mini Freezer in Home Assistant.
+- `0x0376`: temperature, battery, named Refrigerator in Home Assistant.
+- `0x01ef`: temperature, battery, named Freezer in Home Assistant.
 
 Replace these IDs and names with yours. For each sensor, change the `device`
 value in both blocks, and rename the entities. The `device_id` lines place
@@ -122,11 +118,9 @@ The AcuRite bridge reads three keys from `secrets.yaml`, plus the shared Wi-Fi
 keys. [Getting started](getting-started.md#fill-in-the-secrets) shows how to
 generate them.
 
-| Key | Purpose |
-| --- | --- |
-| `acurite_api_encryption_key` | Encrypts the link to Home Assistant |
-| `acurite_ota_password` | Protects Wi-Fi firmware updates |
-| `acurite_ap_password` | Protects the fallback Wi-Fi network |
+- `acurite_api_encryption_key`: Encrypts the link to Home Assistant.
+- `acurite_ota_password`: Protects Wi-Fi firmware updates.
+- `acurite_ap_password`: Protects the fallback Wi-Fi network.
 
 ## Flash and add to Home Assistant
 
@@ -156,14 +150,41 @@ so it is unverified here: compare against a sensor whose battery you know.
 
 ## Troubleshooting
 
-| Symptom | Likely cause | Fix |
-| --- | --- | --- |
-| Device not in Home Assistant | Wrong Wi-Fi settings, or discovery blocked | Read the log over USB. Fix `secrets.yaml`. Or add it with `acurite-bridge.local`. |
-| Wi-Fi fallback access point `acurite-bridge` appears | The board cannot join your Wi-Fi | Join it with `acurite_ap_password`, or fix `secrets.yaml` and flash over USB. |
-| No sensor lines in the log | No antenna, a sensor out of range, a sensor on another frequency, or the wrong board variant | Fit the antenna. Move a sensor close to the board. Check the board is the 433 MHz variant. |
-| Entities stay unavailable | The IDs in the file do not match your sensors | Read the IDs from the log and edit the lists. |
-| Readings drop out when Wi-Fi is busy | A weak antenna next to the Wi-Fi antenna | Use a better 433 MHz antenna, as the component's README suggests. |
-| `pip install` fails on Python 3.15 | ESPHome 2026.10.1 requires Python 3.12 to 3.14 | Use `python3.14`, see [Getting started](getting-started.md#set-up-the-project). |
+### Device not in Home Assistant
+
+**Likely cause:** Wrong Wi-Fi settings, or discovery blocked.
+
+**Fix:** Read the log over USB. Fix `secrets.yaml`. Or add it with `acurite-bridge.local`.
+
+### Wi-Fi fallback access point `acurite-bridge` appears
+
+**Likely cause:** The board cannot join your Wi-Fi.
+
+**Fix:** Join it with `acurite_ap_password`, or fix `secrets.yaml` and flash over USB.
+
+### No sensor lines in the log
+
+**Likely cause:** No antenna, a sensor out of range, a sensor on another frequency, or the wrong board variant.
+
+**Fix:** Fit the antenna. Move a sensor close to the board. Check the board is the 433 MHz variant.
+
+### Entities stay unavailable
+
+**Likely cause:** The IDs in the file do not match your sensors.
+
+**Fix:** Read the IDs from the log and edit the lists.
+
+### Readings drop out when Wi-Fi is busy
+
+**Likely cause:** A weak antenna next to the Wi-Fi antenna.
+
+**Fix:** Use a better 433 MHz antenna, as the component's README suggests.
+
+### `pip install` fails on Python 3.15
+
+**Likely cause:** ESPHome 2026.10.1 requires Python 3.12 to 3.14.
+
+**Fix:** Use `python3.14`, see [Getting started](getting-started.md#set-up-the-project).
 
 ## If you are migrating from an older config
 

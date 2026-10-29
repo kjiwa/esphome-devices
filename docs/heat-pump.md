@@ -51,14 +51,12 @@ technician. Connecting third-party hardware may affect your warranty
 
 ## Parts
 
-| Part | Qty | Notes |
-| --- | --- | --- |
-| [SparkFun ESP32-C3 Mini Development Board, WRL-18036](https://www.sparkfun.com/products/18036) | 1 | SparkFun's board built around the ESP32-C3-MINI-1 module. See the [Espressif DevKitM-1 user guide](https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32c3/esp32-c3-devkitm-1/user_guide.html). |
-| Carrier board | 1 | Order from a PCB fab; see below. |
-| [SparkFun Logic Level Converter, BOB-12009](https://www.sparkfun.com/products/12009) | 1 | Converts 4 channels between 5 V and 3.3 V. |
-| Male pin header, 1x5, 2.54 mm pitch | 2 | One on each side of the carrier board. |
-| JST PAP-05V-S housing with crimp terminals, or a pre-made 5-wire pigtail | 1 | Plugs into CN105. |
-| Dupont jumper wires, female to female | 5 | Carrier board to ESP32. |
+- **[SparkFun ESP32-C3 Mini Development Board, WRL-18036](https://www.sparkfun.com/products/18036)**: quantity 1. SparkFun's board built around the ESP32-C3-MINI-1 module. See the [Espressif DevKitM-1 user guide](https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32c3/esp32-c3-devkitm-1/user_guide.html).
+- **Carrier board**: quantity 1. Order from a PCB fab; see below.
+- **[SparkFun Logic Level Converter, BOB-12009](https://www.sparkfun.com/products/12009)**: quantity 1. Converts 4 channels between 5 V and 3.3 V.
+- **Male pin header, 1x5, 2.54 mm pitch**: quantity 2. One on each side of the carrier board.
+- **JST PAP-05V-S housing with crimp terminals, or a pre-made 5-wire pigtail**: quantity 1. Plugs into CN105.
+- **Dupont jumper wires, female to female**: quantity 5. Carrier board to ESP32.
 
 Quantities are per bridge. The Dupont pitch is 2.54 mm. The CN105 housing is
 2.0 mm pitch, so Dupont plastic bodies do not fit the unit end.
@@ -234,7 +232,7 @@ A working bridge shows these:
   .venv/bin/esphome logs heatpump-livingroom.yaml
   ```
 
-If `with timeout?: YES` appears, see the troubleshooting table.
+If `with timeout?: YES` appears, see [Troubleshooting](#troubleshooting).
 
 ## Tune the update interval
 
@@ -253,18 +251,45 @@ terminal:
 
 ## Troubleshooting
 
-The heat pump bridge has not been bench tested. These rows come from the
+The heat pump bridge has not been bench tested. These entries come from the
 firmware's documentation and from reading the configuration, so treat them
 as expected behavior, not field reports.
 
-| Symptom | Likely cause | Fix |
-| --- | --- | --- |
-| Device not in Home Assistant | The ESP32 did not join Wi-Fi: wrong SSID or password in `secrets.yaml`, or a 5 GHz-only network. Or discovery is blocked. | Flash over USB and read the log. Correct `secrets.yaml`. Or add the device by hand with its `.local` name or IP address. |
-| Device in Home Assistant but no climate entity | The firmware on the board is not the heat pump config, or the entity is hidden. | Open the device page in Home Assistant. If only Uptime shows, flash a `heatpump-*.yaml` file again. |
-| Log shows `with timeout?: YES` | No answer from the heat pump: TX and RX swapped, no 5 V on CN105 pin 3, a loose or shifted connector, or a unit without CN105 support. A cold-boot UART issue is also described in the firmware README. | Repeat the meter checks. Confirm pins 4 and 5. Read the WARNING at the top of the [firmware README](https://github.com/echavet/MitsubishiCN105ESPHome). |
-| TX and RX wired swapped | J_ESP32_1 pin 4 (RX) must reach GPIO4 and pin 5 (TX) must reach GPIO5. A swap stops all communication. The log shows timeouts, as in the row above. | Swap the two jumpers at the ESP32 end. From the schematic the swap should not cause damage (reasoned, not tested). |
-| Wi-Fi fallback access point appears | The ESP32 cannot join your Wi-Fi, so it starts its own network named after the device, for example `heatpump-livingroom`. | Connect with the value of `heatpump_ap_password` and set up Wi-Fi again, or correct `secrets.yaml` and flash over USB. |
-| `pip install` fails on Python 3.15 with "No matching distribution found for esphome==2026.10.1" | ESPHome 2026.10.1 requires Python 3.12 to 3.14. | Create the virtual environment with `python3.14`, see [Getting started](getting-started.md#set-up-the-project). |
+### Device not in Home Assistant
+
+**Likely cause:** The ESP32 did not join Wi-Fi: wrong SSID or password in `secrets.yaml`, or a 5 GHz-only network. Or discovery is blocked.
+
+**Fix:** Flash over USB and read the log. Correct `secrets.yaml`. Or add the device by hand with its `.local` name or IP address.
+
+### Device in Home Assistant but no climate entity
+
+**Likely cause:** The firmware on the board is not the heat pump config, or the entity is hidden.
+
+**Fix:** Open the device page in Home Assistant. If only Uptime shows, flash a `heatpump-*.yaml` file again.
+
+### Log shows `with timeout?: YES`
+
+**Likely cause:** No answer from the heat pump: TX and RX swapped, no 5 V on CN105 pin 3, a loose or shifted connector, or a unit without CN105 support. A cold-boot UART issue is also described in the firmware README.
+
+**Fix:** Repeat the meter checks. Confirm pins 4 and 5. Read the WARNING at the top of the [firmware README](https://github.com/echavet/MitsubishiCN105ESPHome).
+
+### TX and RX wired swapped
+
+**Likely cause:** J_ESP32_1 pin 4 (RX) must reach GPIO4 and pin 5 (TX) must reach GPIO5. A swap stops all communication. The log shows timeouts.
+
+**Fix:** Swap the two jumpers at the ESP32 end. From the schematic the swap should not cause damage (reasoned, not tested).
+
+### Wi-Fi fallback access point appears
+
+**Likely cause:** The ESP32 cannot join your Wi-Fi, so it starts its own network named after the device, for example `heatpump-livingroom`.
+
+**Fix:** Connect with the value of `heatpump_ap_password` and set up Wi-Fi again, or correct `secrets.yaml` and flash over USB.
+
+### `pip install` fails on Python 3.15 with "No matching distribution found for esphome==2026.10.1"
+
+**Likely cause:** ESPHome 2026.10.1 requires Python 3.12 to 3.14.
+
+**Fix:** Create the virtual environment with `python3.14`, see [Getting started](getting-started.md#set-up-the-project).
 
 ## Credits
 

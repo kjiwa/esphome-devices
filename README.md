@@ -13,10 +13,8 @@ a carrier board, an ESP32 and Wi-Fi to Home Assistant.
 
 ## Devices
 
-| Device | Status | Guide |
-| --- | --- | --- |
-| Mitsubishi heat pump bridge | Assembled, bench test pending | [Heat pump bridge](docs/heat-pump.md) |
-| AcuRite 433 MHz sensor bridge | In daily use; this repository's config not yet flashed to the live unit | [AcuRite bridge](docs/acurite.md) |
+- **Mitsubishi heat pump bridge**: assembled, bench test pending. [Heat pump bridge](docs/heat-pump.md)
+- **AcuRite 433 MHz sensor bridge**: in daily use; this repository's config not yet flashed to the live unit. [AcuRite bridge](docs/acurite.md)
 
 ## Quick start
 
@@ -28,16 +26,14 @@ a carrier board, an ESP32 and Wi-Fi to Home Assistant.
 
 ## Repository map
 
-| Path | Contents |
-| --- | --- |
-| `heatpump-*.yaml` | One ESPHome file per heat pump (living room, kid's room, master bedroom) |
-| `packages/heatpump.yaml` | Settings shared by every heat pump file |
-| `acurite-bridge.yaml` | The AcuRite bridge |
-| `secrets.example.yaml` | Template for the git-ignored `secrets.yaml` |
-| `docs/` | The guides and their images |
-| `hardware/heatpump-bridge/` | KiCad project, [board README](hardware/heatpump-bridge/README.md) and fabrication zip |
-| `Makefile` | `make images`, `make fab`, `make check` for the generated files |
-| `requirements.txt` | Pins the ESPHome version |
+- `heatpump-*.yaml`: One ESPHome file per heat pump (living room, kid's room, master bedroom).
+- `packages/heatpump.yaml`: Settings shared by every heat pump file.
+- `acurite-bridge.yaml`: The AcuRite bridge.
+- `secrets.example.yaml`: Template for the git-ignored `secrets.yaml`.
+- `docs/`: The guides and their images.
+- `hardware/heatpump-bridge/`: KiCad project, [board README](hardware/heatpump-bridge/README.md) and fabrication zip.
+- `Makefile`: `make images`, `make fab`, `make check` for the generated files.
+- `requirements.txt`: Pins the ESPHome version.
 
 ## Credits
 

@@ -49,13 +49,11 @@ cp secrets.example.yaml secrets.yaml
 Open `secrets.yaml` in a text editor and replace every value. Each device
 config reads its passwords and keys from this file through `!secret`.
 
-| Key | Used by | Value |
-| --- | --- | --- |
-| `wifi_ssid`, `wifi_password` | All devices | Your Wi-Fi name and password |
-| `heatpump_api_encryption_key` | Heat pump bridges | Generated, see below |
-| `heatpump_ota_password`, `heatpump_ap_password` | Heat pump bridges | Generated, see below |
-| `acurite_api_encryption_key` | AcuRite bridge | Generated, see below |
-| `acurite_ota_password`, `acurite_ap_password` | AcuRite bridge | Generated, see below |
+- `wifi_ssid`, `wifi_password`: used by all devices. Your Wi-Fi name and password.
+- `heatpump_api_encryption_key`: used by heat pump bridges. Generated, see below.
+- `heatpump_ota_password`, `heatpump_ap_password`: used by heat pump bridges. Generated, see below.
+- `acurite_api_encryption_key`: used by AcuRite bridge. Generated, see below.
+- `acurite_ota_password`, `acurite_ap_password`: used by AcuRite bridge. Generated, see below.
 
 An [API encryption key](#api-encryption-key) is 32 random bytes in base64.
 Generate one in a laptop terminal:
