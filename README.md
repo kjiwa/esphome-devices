@@ -28,6 +28,8 @@ Validate, compile, upload and watch a device:
 | `heatpump_api_encryption_key` | `head -c 32 /dev/urandom \| base64 \| tr '+/' 'ab'` |
 | `heatpump_ota_password` | `head /dev/urandom \| tr -dc A-Za-z0-9 \| head -c 20` |
 | `heatpump_ap_password` | `head /dev/urandom \| tr -dc A-Za-z0-9 \| head -c 20` |
+| `acurite_api_encryption_key` | `head -c 32 /dev/urandom \| base64 \| tr '+/' 'ab'` |
+| `acurite_ota_password`, `acurite_ap_password` | `head /dev/urandom \| tr -dc A-Za-z0-9 \| head -c 20` |
 
 To rotate a value, regenerate it and re-flash over OTA.
 
@@ -37,8 +39,9 @@ To rotate a value, regenerate it and re-flash over OTA.
 | `heatpump-livingroom.yaml` | Mitsubishi heat pump bridge | Living Room |
 | `heatpump-kidsroom.yaml` | Mitsubishi heat pump bridge | Kid's Room |
 | `heatpump-masterbedroom.yaml` | Mitsubishi heat pump bridge | Master Bedroom |
+| `acurite-bridge.yaml` | AcuRite 433 MHz sensor bridge (LILYGO T3 V1.6.1) | Kitchen |
 
-All three include `packages/heatpump.yaml` and set `name` and `area`. The firmware uses
+The heat pump files include `packages/heatpump.yaml` and set `name` and `area`. The firmware uses
 [echavet/MitsubishiCN105ESPHome](https://github.com/echavet/MitsubishiCN105ESPHome).
 
 ## Heat pump bridge
