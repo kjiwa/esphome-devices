@@ -34,7 +34,7 @@ jobs:
       - name: Validate configurations
         run: |
           cp secrets.example.yaml secrets.yaml
-          for f in heatpump-*.yaml; do esphome config "$f" > /dev/null; done
+          for f in heatpump-*.yaml acurite-bridge.yaml; do esphome config "$f" > /dev/null; done
 
   privacy:
     uses: kjiwa/.github/.github/workflows/privacy.yml@main
