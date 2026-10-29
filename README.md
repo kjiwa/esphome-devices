@@ -13,7 +13,7 @@ a carrier board, an ESP32 and Wi-Fi to Home Assistant.
 
 ## Devices
 
-- **Mitsubishi heat pump bridge**: assembled, bench test pending. [Heat pump bridge](docs/heat-pump.md)
+- **Mitsubishi heat pump bridge**: assembled, bench test pending; printable enclosure designed, never printed. [Heat pump bridge](docs/heat-pump.md)
 - **AcuRite 433 MHz sensor bridge**: in daily use; this repository's config not yet flashed to the live unit. [AcuRite bridge](docs/acurite.md)
 
 ## Quick start
