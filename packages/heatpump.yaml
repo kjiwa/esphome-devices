@@ -54,7 +54,7 @@ uart:
 climate:
   - platform: cn105
     id: hp
-    name: ${friendly_name} (${area})
+    name: None
     update_interval: 2s
 
 sensor:
