@@ -354,18 +354,21 @@ setpoint, fan and power stay with the remote.
 2. Flash the device again over Wi-Fi, as in
    [Tune the update interval](#tune-the-update-interval).
 
-The helper becomes unknown when the thermometer stops reporting. The unit
-returns to its own sensor, so the remote keeps working, in three cases:
+The helper reports a non-numeric state when the thermometer is unavailable or
+stops reporting, and the device sends nothing for such a state or for a
+reading outside 1 to 40 °C. The unit returns to its own sensor, so the remote
+keeps working, in these cases:
 
-- The thermometer is offline: the helper is unknown, the device stops sending
-  and the firmware times out after 10 minutes.
+- The thermometer is offline or its reading is out of range: the helper is
+  non-numeric, the device stops sending and the firmware times out after 10
+  minutes.
 - Home Assistant or Wi-Fi is down: the device stops sending, with the same
   timeout.
 - The ESP32 is down: the unit receives no updates and reverts by itself
   (a firmware source comment says so; unverified on hardware).
 
-Home Assistant is assumed to use °F. For °C, remove the `lambda` filter in
-[`packages/heatpump.yaml`](../packages/heatpump.yaml).
+Home Assistant is assumed to use °F. For °C, change `(x - 32) * (5.0 / 9.0)`
+to `x` in [`packages/heatpump.yaml`](../packages/heatpump.yaml).
 
 ## Troubleshooting
 
