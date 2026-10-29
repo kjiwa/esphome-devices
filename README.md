@@ -32,7 +32,7 @@ a carrier board, an ESP32 and Wi-Fi to Home Assistant.
 - `secrets.example.yaml`: Template for the git-ignored `secrets.yaml`.
 - `docs/`: The guides and their images.
 - `hardware/heatpump-bridge/`: KiCad project, [board README](hardware/heatpump-bridge/README.md), fabrication zip and OpenSCAD enclosure model.
-- `Makefile`: `make images`, `make fab`, `make check`, `make enclosure` for the generated files.
+- `Makefile`: `make images`, `make fab`, `make enclosure` for the generated files; `make check` verifies them and needs KiCad and OpenSCAD.
 - `requirements.txt`: Pins the ESPHome version.
 
 ## Credits

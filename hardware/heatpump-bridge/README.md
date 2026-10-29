@@ -61,8 +61,8 @@ lid to flash, and never with CN105 connected (see
 [the power rule](../../docs/heat-pump.md#the-power-rule)).
 
 Status: untested. It has never been printed, and the space in the heat pump
-unit is unmeasured. The default box is 60.92 x 29.0 x 28.2 mm
-(length x width x height: outer size), about 29.8 mm tall with the lid.
+unit is unmeasured. Every size is a parameter, and the outer size follows from
+them: render the box to read it.
 
 - Material: PETG or ASA. Behavior near the unit's coil is unverified.
 - Print orientation: box floor down, lid plate down.
