@@ -72,3 +72,6 @@ Flash over USB with CN105 disconnected, then use OTA.
 
 ### Tuning
 Set `update_interval` in `packages/heatpump.yaml` from the `Cycle ended in` lines in the logs.
+
+## Hardware
+`hardware/heatpump-bridge` holds the KiCad 10.0 project for the carrier board: a SparkFun BOB-12009 level converter and two 1x5 headers. The `BOB-12009` symbol and footprint are project-local. Everything under `hardware/` is MIT licensed.
