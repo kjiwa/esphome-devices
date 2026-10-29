@@ -71,6 +71,20 @@ and each set to 0 to disable its feature: `Snap_Depth` (lid bumps, default
 [heat pump guide](../../docs/heat-pump.md#fit-the-enclosure) covers printing
 and assembly.
 
+Jumper slack lies folded on the floor between the rails, under the carrier.
+`Jumper_Length` is the jumper's end-to-end length in mm (default 100). It must
+exceed the longest modelled route, 70.9 mm, so 100 is the smallest stock
+length. The box deepens to hold the slack: at 400 it is 29.1 mm tall instead
+of 28.2 mm. `Jumper_Diameter` (1.4 mm) and `Slack_Packing` (0.3, the share of
+the slack space a folded bundle fills) are both to check on a test print. Run
+this in a laptop terminal, from the repository root:
+
+```sh
+make -B enclosure ENCLOSURE_ARGS='-D Jumper_Length=400'
+```
+
+Or set the parameter in the Customizer.
+
 <img src="../../docs/images/enclosure-section.png" alt="Lengthwise cut through the box: the ESP32 above the carrier board and its blue converter, the CN105 lead leaving through the notch, and translucent orange volumes marking space kept free for the jumpers and the lead" width="420">
 
 Lengthwise cut of the model. A render, not a photo. The ESP32 and the
@@ -92,7 +106,7 @@ sizes marked "check on a test print" are unverified. Constants marked
 - `make enclosure` writes `build/enclosure/heatpump-bridge-box.stl` and
   `build/enclosure/heatpump-bridge-lid.stl`.
 - `make enclosure-check` runs the interference checks.
-- `make enclosure-images` rebuilds the four enclosure renders in
+- `make enclosure-images` rebuilds the five enclosure renders in
   `docs/images/`.
 
 All three need OpenSCAD; the `OPENSCAD` variable overrides the binary.
