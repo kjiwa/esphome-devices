@@ -180,28 +180,7 @@ so it is unverified here: compare against a sensor whose battery you know.
 
 **Fix:** Use a better 433 MHz antenna, as the component's README suggests.
 
-### `pip install` fails on Python 3.15
-
-**Likely cause:** ESPHome 2026.10.1 requires Python 3.12 to 3.14.
-
-**Fix:** Use `python3.14`, see [Getting started](getting-started.md#set-up-the-project).
-
-## If you are migrating from an older config
-
-If your older config used other secret names or an unpinned component
-reference, note what changed in this repository:
-
-- The secret keys are `acurite_api_encryption_key`, `acurite_ota_password`
-  and `acurite_ap_password`. Copy your live values into these keys. Do not
-  generate new ones: a new API key must be entered again in Home Assistant,
-  and the live unit would need a flash with it.
-- `wifi_ssid` and `wifi_password` are shared with the other devices.
-- The external component is pinned to one commit
-  (`592fa3ce5df931fd55b936f5ff7307159d7b0413`) of
-  [swoboda1337/acurite-esphome](https://github.com/swoboda1337/acurite-esphome)
-  so a later change upstream cannot alter your build.
-- The device name stays `acurite-bridge`, so existing Home Assistant entities
-  keep their identity.
+For `pip` errors on Python 3.15, see [Set up the project](getting-started.md#set-up-the-project).
 
 ## Credits
 

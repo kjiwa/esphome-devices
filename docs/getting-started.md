@@ -11,9 +11,8 @@ Terms marked with a link, such as [ESPHome](#esphome), are defined in the
 
 - A computer (laptop or desktop) with a terminal. Commands on this page are
   for macOS and Linux shells. Windows is untested here.
-- Python 3.12, 3.13 or 3.14. ESPHome 2026.10.1, the version this repository
-  pins, does not install on Python 3.15 (pip reports "No matching
-  distribution"; checked while writing these docs).
+- Python 3, with the version range given in
+  [Set up the project](#set-up-the-project).
 - Git, to download this repository.
 - A micro-USB data cable (power-only cables do not work) for the first flash
   of each board.
@@ -37,6 +36,9 @@ python3.14 -m venv .venv
 cp secrets.example.yaml secrets.yaml
 ```
 
+- ESPHome 2026.10.1, the version this repository pins, needs Python 3.12,
+  3.13 or 3.14. On Python 3.15 `pip install` fails with "No matching
+  distribution found for esphome==2026.10.1".
 - `python3.14` creates a private Python environment in `.venv`. Use
   `python3.12` or `python3.13` if that is what you have installed. Plain
   `python3` works if `python3 --version` prints 3.12, 3.13 or 3.14.
@@ -70,10 +72,11 @@ LC_ALL=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 20; echo
 ```
 
 Paste each output into `secrets.yaml`, one value per key. All heat pump
-bridges share one set of three keys. To rotate a value, generate a new one
-and flash the device again. A changed OTA password may need a USB flash
-first (unverified). A changed API encryption key must also be entered again
-in Home Assistant.
+bridges share one set of three keys. For a device that is already in Home
+Assistant, keep its existing API encryption key, or enter the new key again
+in Home Assistant. To rotate a value, generate a new one and flash the
+device again. A changed OTA password may need a USB flash
+first (unverified).
 
 ## Check a device file
 

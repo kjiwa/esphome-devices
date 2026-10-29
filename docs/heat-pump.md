@@ -51,7 +51,7 @@ technician. Connecting third-party hardware may affect your warranty
 
 ## Parts
 
-- **[SparkFun ESP32-C3 Mini Development Board, WRL-18036](https://www.sparkfun.com/products/18036)**: quantity 1. SparkFun's board built around the ESP32-C3-MINI-1 module. See the [Espressif DevKitM-1 user guide](https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32c3/esp32-c3-devkitm-1/user_guide.html).
+- **[SparkFun ESP32-C3 Mini Development Board, WRL-18036](https://www.sparkfun.com/products/18036)**: quantity 1. SparkFun's product page links Espressif's ESP32-C3-DevKitM-1 V1 documentation for this board, including the [Espressif DevKitM-1 user guide](https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32c3/esp32-c3-devkitm-1/user_guide.html) and schematic. Espressif's published schematic wires a CP2102N USB-to-serial chip to GPIO20 and GPIO21 (UART0), which is why the log appears over micro-USB. Verified against the published schematic, not against the physical board.
 - **Carrier board**: quantity 1. Order from a PCB fab; see below.
 - **[SparkFun Logic Level Converter, BOB-12009](https://www.sparkfun.com/products/12009)**: quantity 1. Converts 4 channels between 5 V and 3.3 V.
 - **Male pin header, 1x5, 2.54 mm pitch**: quantity 2. One on each side of the carrier board.
@@ -154,12 +154,14 @@ and damage the converter or the ESP32.
    square pad marked "1". The board also prints circled 1 and 5 beside the
    header.
 3. Touch one probe to the metal terminal visible inside each housing cavity
-   and the other to the matching header pin. Each of the five pairs must
-   beep, and no other combination may.
+   and the other to the same-numbered header pin. All five wires must land
+   on the same-numbered header pin, so a one-pin shift fails the check. Each
+   of the five pairs must beep, and no other combination may.
 4. Confirm that J_CN105_1 pin 2 (GND) and pin 3 (5V) do not beep against
    each other.
-5. Confirm that the wire on J_CN105_1 pin 1 (12V) goes to nothing else on
-   the board.
+5. Confirm that the wire for CN105 pin 1 beeps against header pin 1 and
+   against no other header pin. Header pin 1 is the 12V pin and nothing else
+   on the board uses it.
 
 Identify pin 1 on the unit's CN105 header from the demo circuit in the
 [SwiCago/HeatPump README](https://github.com/SwiCago/HeatPump#demo-circuit)
@@ -285,11 +287,7 @@ as expected behavior, not field reports.
 
 **Fix:** Connect with the value of `heatpump_ap_password` and set up Wi-Fi again, or correct `secrets.yaml` and flash over USB.
 
-### `pip install` fails on Python 3.15 with "No matching distribution found for esphome==2026.10.1"
-
-**Likely cause:** ESPHome 2026.10.1 requires Python 3.12 to 3.14.
-
-**Fix:** Create the virtual environment with `python3.14`, see [Getting started](getting-started.md#set-up-the-project).
+For `pip` errors on Python 3.15, see [Set up the project](getting-started.md#set-up-the-project).
 
 ## Credits
 
