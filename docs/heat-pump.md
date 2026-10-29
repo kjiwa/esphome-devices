@@ -60,10 +60,10 @@ technician. Connecting third-party hardware may affect your warranty
 - **[SparkFun Logic Level Converter, BOB-12009](https://www.sparkfun.com/products/12009)**: quantity 1. Converts 4 channels between 5 V and 3.3 V.
 - **Right-angle male pin header, 1x5, 2.54 mm pitch**: quantity 2. One on each side of the carrier board.
 - **JST PAP-05V-S housing with crimp terminals, or a pre-made 5-wire pigtail**: quantity 1. Plugs into CN105.
-- **Dupont jumper wires, female to female**: quantity 5, 10 cm. Carrier board to ESP32.
-  The longest route in the model is 71 mm; with about 2 cm for both housings
-  and slack, 10 cm is the shortest common stock that fits. The routing is
-  illustrative, and the author's 40 cm jumpers do not fit in the box.
+- **Dupont jumper wires, female to female**: quantity 5, 10 cm recommended.
+  Carrier board to ESP32. Longer jumpers, such as 40 cm, also fit when you
+  print the box with Jumper_Length set; see
+  [Print the box and lid](#print-the-box-and-lid).
 - **Printed box and lid**: quantity 1 of each. Holds both boards; see
   [Fit the enclosure](#fit-the-enclosure).
 - **Mini zip tie, 2.5 mm wide**: quantity 1. Ties the CN105 lead to the box.
@@ -254,6 +254,11 @@ block shape and the wire routing is illustrative.
 
 The parts pulled apart. A render, not a photo.
 
+<img src="images/enclosure-section-long.png" alt="Lengthwise cut through a deeper box: the ESP32 and the carrier board above, and a stack of folded colored wires filling the deeper floor below them" width="420">
+
+With 40 cm jumpers (Jumper_Length = 400): a lengthwise cut showing the folded
+slack between the rails. A render, not a photo; the bundle is illustrative.
+
 The box holds the carrier board, the ESP32 and the five jumpers. Only the
 CN105 lead leaves it, through the notch. The lid snaps on, and a block outside
 the end wall takes a zip tie that holds the lead.
@@ -264,7 +269,9 @@ the end wall takes a zip tie that holds the lead.
    [board README](../hardware/heatpump-bridge/README.md#enclosure). An STL
    file is the 3D model format a slicer reads. A slicer is the program that
    turns the model into instructions for a 3D printer. The same README shows
-   how to render the model to read the box's outer size.
+   how to render the model to read the box's outer size. With jumpers
+   longer than 10 cm, set Jumper_Length to their length in mm first; the
+   README shows how.
 2. Print in PETG or ASA. How either behaves near the unit's coil is
    unverified.
 3. Print the box floor down and the lid plate down.
@@ -275,11 +282,14 @@ the end wall takes a zip tie that holds the lead.
    [Flash the firmware](#flash-the-firmware), with CN105 unplugged.
 2. Plug the five jumpers into J_ESP32_1 and onto the ESP32 pins, as in the
    [wiring list](#wiring-list). Plug the CN105 lead into J_CN105_1.
-3. Set the carrier board in the box, converter side up.
-4. Rest the ESP32 above it, parts up.
-5. Lay the CN105 lead in the notch, with its housing outside the box.
-6. Snap the lid on. Its tab clamps the lead in the notch.
-7. Thread the zip tie through the slot in the tie block outside the end wall,
+3. Only with jumpers longer than 10 cm: fold the slack into a flat bundle and
+   lay it on the floor between the rails, as in the lengthwise cut above. The
+   carrier then sits over it.
+4. Set the carrier board in the box, converter side up.
+5. Rest the ESP32 above it, parts up.
+6. Lay the CN105 lead in the notch, with its housing outside the box.
+7. Snap the lid on. Its tab clamps the lead in the notch.
+8. Thread the zip tie through the slot in the tie block outside the end wall,
    around the lead, and pull it snug. The lead then holds against a tug
    instead of pulling on the notch.
 

@@ -23,6 +23,9 @@ Right_Angle_Pin_Height = 1.27; // Pin centre above the carrier top (check on a t
 Plug_Reach = 16; // Header hole centre to the back of the Dupont housing (check on a test print)
 
 /* [Wiring] */
+Jumper_Length = 100; // Jumper length, end to end (100 for the recommended 10 cm); the box deepens for longer ones
+Jumper_Diameter = 1.4; // Wire diameter of one jumper (check on a test print)
+Slack_Packing = 0.3; // Share of the slack space a hand-folded bundle fills (check on a test print)
 Dupont_Length = 14; // Dupont housing length on the ESP32 pins (check on a test print)
 Dupont_Size = 2.54; // Dupont housing width and height (check on a test print)
 Wire_Bend = 5; // Space for wires to bend (check on a test print)
@@ -115,7 +118,6 @@ Hole_CN105_X = Carrier_X0 + Carrier_Length - J_CN105_Hole;
 Plug_ESP32_X = Hole_ESP32_X - Plug_Reach;
 Plug_CN105_X = Hole_CN105_X + Plug_Reach;
 
-Floor_Top = -(Header_Body_Height + Dupont_Length + Wire_Bend);
 Rim_Z = ESP32_Top_Height + Top_Clearance;
 Cavity_X0 = Plug_ESP32_X - Wire_Bend - Board_Clearance;
 Cavity_X1 = Plug_CN105_X + Board_Clearance;
@@ -134,6 +136,16 @@ Tie_Z = Lead_Bottom - Tie_Floor - Tie_Hole_Height / 2;
 Catch_X = Carrier_X0 + Carrier_Length / 2 - Catch_Length / 2;
 Snap_X = (Cavity_X0 + Cavity_X1) / 2 - Snap_Length / 2;
 Snap_Z = Lid_Lip_Depth / 2;
+Route_Lengths = [for (j = Jumpers) PathLength(JumperPath(j[0], j[1], j[2], 0, 0))];
+Slack_Per_Wire = Jumper_Length - Sum(Route_Lengths) / len(Jumpers); // Housings count as slack, which oversizes the space
+Slack_Volume = len(Jumpers) * Slack_Per_Wire * PI * pow(Jumper_Diameter / 2, 2) / Slack_Packing;
+Channel_X0 = Rail_X0;
+Channel_X1 = Cavity_X1 - Board_Clearance;
+Channel_Y = Rail_In - Board_Clearance;
+Channel_Top = Carrier_Z0 - Pin_Tail - Board_Clearance;
+Slack_Layers = ceil(Slack_Per_Wire / (Channel_X1 - Channel_X0));
+Slack_Height = max(Slack_Volume / ((Channel_X1 - Channel_X0) * 2 * Channel_Y), Slack_Layers * Jumper_Diameter);
+Floor_Top = min(-(Header_Body_Height + Dupont_Length + Wire_Bend), Channel_Top - Slack_Height);
 
 assert(Rail_Thickness > 0 && Rail_In + Rail_Thickness <= Row_Y - Dupont_Size / 2,
   "Rails overlap the ESP32 header rows: reduce Rail_Thickness or Board_Clearance");
@@ -152,6 +164,9 @@ assert(Catch_Reach >= 0 && Carrier_Half - Catch_Reach >= Converter_Court,
   "Catch_Reach would put the hooks over the converter courtyard");
 assert(Tie_Width == 0 || (Tie_Width >= Tie_Strap + 0.4 && Tie_Width < Tie_Block_Length - 1.6),
   "Tie_Width must pass the strap with 0.4 mm play and leave 0.8 mm of block each side");
+assert(Jumper_Length > max(Route_Lengths), "Jumper_Length is shorter than the longest modelled jumper route");
+assert(Jumper_Diameter > 0 && Slack_Packing > 0 && Slack_Packing <= 1,
+  "Jumper_Diameter must be positive and Slack_Packing must be above 0 and at most 1");
 assert(Lead_Crush > 0 && Lead_Crush < Lead_Height, "Lead_Crush must be between 0 and Lead_Height");
 
 module RoundedRect(x0, x1, y0, y1, r) {
@@ -317,6 +332,10 @@ module TailKeepOut(x) {
     Carrier_Z0 - Pin_Tail, Carrier_Z0);
 }
 
+module SlackKeepOut() {
+  Block(Channel_X0, Channel_X1, -Channel_Y, Channel_Y, Floor_Top, Floor_Top + Slack_Height);
+}
+
 module KeepOuts(Lead = true) {
   for (s = [-1, 1])
     Block(Rail_X0, Header_X1, s * Row_Y - Dupont_Size / 2, s * Row_Y + Dupont_Size / 2,
@@ -326,34 +345,50 @@ module KeepOuts(Lead = true) {
   PlugKeepOut(Hole_CN105_X, Plug_CN105_X);
   TailKeepOut(Hole_ESP32_X);
   TailKeepOut(Hole_CN105_X);
+  SlackKeepOut();
   if (Lead) LeadPath();
 }
 
 function PinY(pin) = Header_Offset + (pin - 3) * Pitch;
 function EspPinX(index) = ESP32_Length / 2 - Header_Pins * Pitch / 2 + (index + 0.5) * Pitch;
 
-function JumperPath(pin, side, index) = let(
+function Sum(v, i = 0) = i >= len(v) ? 0 : v[i] + Sum(v, i + 1);
+function PathLength(p) = Sum([for (i = [1 : len(p) - 1]) norm(p[i] - p[i - 1])]);
+
+function JumperPath(pin, side, index, carrier_lift = Carrier_Lift, esp32_lift = ESP32_Lift) = let(
   k = pin - 1, y = PinY(pin), row_y = side * Row_Y, x = EspPinX(index),
   bend_x = Plug_ESP32_X - 1 - 0.8 * k, low = Dupont_Bottom - 1.4 - (Wire_Bend - 2.5) / 3 * max(k - 1, 0)
 ) [
-  [Plug_ESP32_X, y, Pin_Z + Carrier_Lift],
-  [bend_x, y, Pin_Z + Carrier_Lift],
-  [bend_x, y, low + Carrier_Lift],
-  [bend_x, row_y, low + ESP32_Lift],
-  [x, row_y, low + ESP32_Lift],
-  [x, row_y, Dupont_Bottom + ESP32_Lift]
+  [Plug_ESP32_X, y, Pin_Z + carrier_lift],
+  [bend_x, y, Pin_Z + carrier_lift],
+  [bend_x, y, low + carrier_lift],
+  [bend_x, row_y, low + esp32_lift],
+  [x, row_y, low + esp32_lift],
+  [x, row_y, Dupont_Bottom + esp32_lift]
 ];
 
-module Wire(points) {
+module Wire(points, radius = Wire_Radius) {
   for (i = [0 : len(points) - 2])
     hull() {
-      translate(points[i]) sphere(Wire_Radius, $fn = 12);
-      translate(points[i + 1]) sphere(Wire_Radius, $fn = 12);
+      translate(points[i]) sphere(radius, $fn = 12);
+      translate(points[i + 1]) sphere(radius, $fn = 12);
     }
 }
 
 module Jumpers() {
   for (j = Jumpers) Tint(j[3]) Wire(JumperPath(j[0], j[1], j[2]));
+}
+
+function BundleZ(n, layers) = Floor_Top + (layers > 1
+  ? Jumper_Diameter / 2 + n * (Slack_Height - Jumper_Diameter) / (layers - 1)
+  : Slack_Height / 2);
+
+function BundlePath(y, layers) = let(x0 = Channel_X0 + Jumper_Diameter / 2, x1 = Channel_X1 - Jumper_Diameter / 2)
+  [for (n = [0 : layers - 1], p = [0, 1]) [(n + p) % 2 == 0 ? x0 : x1, y, BundleZ(n, layers)]];
+
+module SlackBundle() {
+  for (i = [0 : len(Jumpers) - 1])
+    Tint(Jumpers[i][3]) Wire(BundlePath((i - (len(Jumpers) - 1) / 2) * Jumper_Diameter, Slack_Layers), Jumper_Diameter / 2);
 }
 
 module Housing(x0, x1, y) {
@@ -460,6 +495,7 @@ module Detail(Lead = true) {
   ESP32Detail();
   CarrierDetail(Lead);
   Jumpers();
+  SlackBundle();
   if (Lead && Tie_Width > 0) ZipTie();
 }
 
