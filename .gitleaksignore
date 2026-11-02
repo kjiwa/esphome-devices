@@ -1,0 +1,3 @@
+# secrets.example.yaml holds placeholder values; the real secrets.yaml is untracked.
+ec5589711c9642bd4b1a27f56381811d28d77644:secrets.example.yaml:generic-api-key:6
+f65a05540e3259a7bfe47a8856b83980108d3b9d:secrets.example.yaml:generic-api-key:3
