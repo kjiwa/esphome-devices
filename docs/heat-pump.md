@@ -48,7 +48,7 @@ technician. Connecting third-party hardware may affect your warranty
 
 ## Parts
 
-- **[Serin Labs CN105 ESP32 Controller](https://serin-labs.com/controller.html)**: quantity 1 per unit. It ships with a CN105-to-Grove cable, in 20 cm or 50 cm. Serin recommends 20 cm for wall units and cassettes, where the board tucks inside, and 50 cm for metal-bodied ducted air handlers. It ships unflashed, with an ESP32-S3 board that this repository's config targets. Serin also sells an ESP32-C6 version; change the `board`, `flash_size` and pin substitutions in `packages/heatpump.yaml` to the values in Serin's [ESP32-C6 board file](https://github.com/serin-labs/serin-cn105/blob/main/esphome/common/esp32c6.yaml).
+- **[Serin Labs CN105 ESP32 Controller](https://serin-labs.com/controller.html)**: quantity 1 per unit. It ships with a CN105-to-Grove cable, in 20 cm or 50 cm. Serin recommends 20 cm for wall units and cassettes, where the board tucks inside, and 50 cm for metal-bodied ducted air handlers. It ships unflashed. The board should be an ESP32-S3 (an M5Stack AtomS3 Lite, inferred from Serin's board file; confirm when it arrives), which this repository's config targets. Serin's repo also has a board file for an ESP32-C6; if that board arrives, change the `board`, `flash_size` and pin settings in `packages/heatpump.yaml` to the values in its [ESP32-C6 board file](https://github.com/serin-labs/serin-cn105/blob/main/esphome/common/esp32c6.yaml).
 - **A USB-C data cable**: for flashing. Power-only cables do not work.
 
 The cable has no level shifting. The CN105 data lines run at 5 V and the
@@ -64,7 +64,10 @@ controller talking to the unit.
 ## Flash the firmware
 
 Flash with this repository's device file, not Serin's web flasher, so your
-secrets and the room temperature feed apply.
+secrets and the room temperature feed apply. This replaces Serin's
+firmware, so Serin's web flasher, Serin Link pairing, web server and Bluetooth
+proxy are not included. Serin's vertical and horizontal vane selects are not in
+`packages/heatpump.yaml` either.
 
 1. Complete [Getting started](getting-started.md), including the secrets
    file.
@@ -198,13 +201,13 @@ as expected behavior, not field reports.
 
 **Likely cause:** The controller did not join Wi-Fi: wrong SSID or password in `secrets.yaml`, or a 5 GHz-only network. Or discovery is blocked.
 
-**Fix:** Flash over USB and read the log. Correct `secrets.yaml`. Or add the device by hand with its `.local` name or IP address.
+**Fix:** Flash over USB, with the CN105 cable disconnected, and read the log. Correct `secrets.yaml`. Or add the device by hand with its `.local` name or IP address.
 
 ### Device in Home Assistant but no climate entity
 
 **Likely cause:** The firmware on the board is not the heat pump config, or the entity is hidden.
 
-**Fix:** Open the device page in Home Assistant. If only Uptime shows, flash a `heatpump-*.yaml` file again.
+**Fix:** Open the device page in Home Assistant. If only Uptime and Wi-Fi signal show, flash a `heatpump-*.yaml` file again.
 
 ### Log shows `with timeout?: YES`
 
@@ -214,7 +217,7 @@ as expected behavior, not field reports.
 
 ### Weak or dropping Wi-Fi
 
-**Likely cause:** The unit's metal casing shields the controller. One MSZ-GL18NA owner reported dropouts with the board inside the unit.
+**Likely cause:** Metal parts inside the unit may shield the controller. One MSZ-GL18NA owner reported dropouts with the board inside the unit.
 
 **Fix:** Read the Wi-Fi signal sensor with the cover on and off, then reposition the controller inside the cavity.
 
@@ -222,7 +225,7 @@ as expected behavior, not field reports.
 
 **Likely cause:** The controller cannot join your Wi-Fi, so it starts its own network named after the device, for example `heatpump-livingroom`.
 
-**Fix:** Connect with the value of `heatpump_ap_password` and set up Wi-Fi again, or correct `secrets.yaml` and flash over USB.
+**Fix:** Connect with the value of `heatpump_ap_password` and set up Wi-Fi again, or correct `secrets.yaml` and flash over USB with the CN105 cable disconnected.
 
 For `pip` errors on Python 3.15, see [Set up the project](getting-started.md#set-up-the-project).
 
