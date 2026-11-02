@@ -12,11 +12,10 @@ Assistant over Wi-Fi.
 
 ## Status and audience
 
-Status: in daily use. The author's live bridge runs an earlier copy of this
-configuration. The file in this repository, [`acurite-bridge.yaml`](../acurite-bridge.yaml),
-compiles but has not yet been flashed to the live unit. Entity names are
-kept identical so the switch should not change Home Assistant entities
-(not yet confirmed on the live unit).
+Status: in daily use. The author's live bridge runs the file in this
+repository, [`acurite-bridge.yaml`](../acurite-bridge.yaml), flashed over the
+air in November 2026. The sensors reported again in Home Assistant after the
+flash, under the same entity names.
 
 This guide is for someone who owns AcuRite 433 MHz sensors and a Home
 Assistant installation. It needs no soldering. Read
