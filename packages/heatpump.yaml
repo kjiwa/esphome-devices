@@ -1,8 +1,8 @@
 substitutions:
   friendly_name: Heat Pump
-  board: esp32-c3-devkitm-1
-  uart_rx_pin: GPIO4
-  uart_tx_pin: GPIO5
+  board: esp32-s3-devkitc-1
+  uart_rx_pin: GPIO2
+  uart_tx_pin: GPIO1
 
 esphome:
   name: ${name}
@@ -11,12 +11,12 @@ esphome:
 
 esp32:
   board: ${board}
+  flash_size: 8MB
   framework:
     type: esp-idf
 
 logger:
   level: INFO
-  hardware_uart: UART0
 
 api:
   encryption:
@@ -61,6 +61,10 @@ climate:
 sensor:
   - platform: uptime
     name: Uptime
+
+  - platform: wifi_signal
+    name: Wi-Fi signal
+    update_interval: 60s
 
   # Home Assistant reports Fahrenheit; the heat pump takes Celsius. A reading
   # outside the range the unit accepts becomes NaN, so sending stops and the

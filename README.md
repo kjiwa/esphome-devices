@@ -1,19 +1,18 @@
 # esphome-devices
 
-[ESPHome](docs/getting-started.md#esphome) configurations and a KiCad board
-for devices that report to
+[ESPHome](docs/getting-started.md#esphome) configurations for devices that report to
 [Home Assistant](docs/getting-started.md#home-assistant). Everything needed to
 connect a Mitsubishi heat pump, or to run an AcuRite 433 MHz sensor bridge, is
 in this repository or linked from it.
 
-<img src="docs/images/heatpump-system.svg" alt="Block diagram: a heat pump CN105 port connects through a cable and a carrier board to an ESP32, which reaches Home Assistant over Wi-Fi" width="420">
+<img src="docs/images/heatpump-system.svg" alt="Block diagram: a heat pump CN105 port connects through a cable to a Serin controller, which reaches Home Assistant over Wi-Fi" width="420">
 
-The heat pump bridge: the unit's [CN105](docs/getting-started.md#cn105) port,
-a carrier board, an ESP32 and Wi-Fi to Home Assistant.
+The heat pump controller: the unit's [CN105](docs/getting-started.md#cn105)
+port, a Serin controller and Wi-Fi to Home Assistant.
 
 ## Devices
 
-- **Mitsubishi heat pump bridge**: assembled, bench test pending; printable enclosure test printed once, lid fixed and not yet reprinted. [Heat pump bridge](docs/heat-pump.md)
+- **Mitsubishi heat pump controller**: Serin controllers ordered, not yet installed. [Heat pump controller](docs/heat-pump.md)
 - **AcuRite 433 MHz sensor bridge**: in daily use; this repository's config not yet flashed to the live unit. [AcuRite bridge](docs/acurite.md)
 
 ## Quick start
@@ -21,7 +20,7 @@ a carrier board, an ESP32 and Wi-Fi to Home Assistant.
 1. Read [Getting started](docs/getting-started.md): install the tools, then
    create your `secrets.yaml`.
 2. Open the guide for your device: [heat pump](docs/heat-pump.md) or
-   [AcuRite](docs/acurite.md). Build the hardware and check it before power.
+   [AcuRite](docs/acurite.md). Set up the hardware as it describes.
 3. Flash the board and add it to Home Assistant, as the guide describes.
 
 ## Repository map
@@ -31,21 +30,19 @@ a carrier board, an ESP32 and Wi-Fi to Home Assistant.
 - `acurite-bridge.yaml`: The AcuRite bridge.
 - `secrets.example.yaml`: Template for the git-ignored `secrets.yaml`.
 - `docs/`: The guides and their images.
-- `hardware/heatpump-bridge/`: KiCad project, [board README](hardware/heatpump-bridge/README.md), fabrication zip and OpenSCAD enclosure model.
-- `Makefile`: `make images`, `make fab`, `make enclosure` for the generated files; `make check` verifies them and needs KiCad and OpenSCAD.
 - `requirements.txt`: Pins the ESPHome version.
 
 ## Credits
 
-These are external projects; this repository configures and wires them.
+These are external projects; this repository configures them.
 
 - Heat pump firmware: [echavet/MitsubishiCN105ESPHome](https://github.com/echavet/MitsubishiCN105ESPHome)
   (BSD 2-Clause).
 - AcuRite decoder: [swoboda1337/acurite-esphome](https://github.com/swoboda1337/acurite-esphome)
   (no license file, so its terms are unstated).
-- Heat pump ESP32 board: [Espressif ESP32-C3-DevKitM-1](https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32c3/esp32-c3-devkitm-1/user_guide.html),
-  sold by [SparkFun](https://www.sparkfun.com/products/18036) as WRL-18036. SparkFun also makes the
-  [BOB-12009 level converter](https://www.sparkfun.com/products/12009).
+- Heat pump controller: [Serin Labs](https://serin-labs.com/controller.html)
+  and its [serin-labs/serin-cn105](https://github.com/serin-labs/serin-cn105)
+  board settings (MIT).
 - AcuRite board: [LILYGO](https://github.com/Xinyuan-LilyGO/LilyGo-LoRa-Series) T3 V1.6.1.
 
 ## License
