@@ -1,9 +1,9 @@
 # esphome-devices
 
-[ESPHome](docs/getting-started.md#esphome) configurations for devices that report to
-[Home Assistant](docs/getting-started.md#home-assistant). Everything needed to
-connect a Mitsubishi heat pump, or to run an AcuRite 433 MHz sensor bridge, is
-in this repository or linked from it.
+[ESPHome](docs/getting-started.md#esphome) configurations for devices that
+report to [Home Assistant](docs/getting-started.md#home-assistant). Everything
+needed to connect a Mitsubishi heat pump, or to run an AcuRite 433 MHz sensor
+bridge, is in this repository or linked from it.
 
 <img src="docs/images/heatpump-system.svg" alt="Block diagram: a heat pump CN105 port connects through a cable to a Serin controller, which reaches Home Assistant over Wi-Fi" width="420">
 
@@ -20,8 +20,9 @@ port, a Serin controller and Wi-Fi to Home Assistant.
 1. Read [Getting started](docs/getting-started.md): install the tools, then
    create your `secrets.yaml`.
 2. Open the guide for your device: [heat pump](docs/heat-pump.md) or
-   [AcuRite](docs/acurite.md). Set up the hardware as it describes.
-3. Flash the board and add it to Home Assistant, as the guide describes.
+   [AcuRite](docs/acurite.md). Gather the parts it lists.
+3. Flash the board, install it and add it to Home Assistant, in the order the
+   guide gives.
 
 ## Repository map
 

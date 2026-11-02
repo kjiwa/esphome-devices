@@ -103,7 +103,8 @@ done
 `-q` hides the merged configuration and the warnings, and still prints
 errors. Without it, expect warnings that do not fail the check: ESPHome
 recommends encryption over an OTA password, and the AcuRite file warns that
-GPIO5 is a strapping pin.
+GPIO5 is a strapping pin (a pin the chip reads at boot to choose its
+start-up mode).
 
 ## Flash a board over USB
 
