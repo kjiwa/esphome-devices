@@ -198,5 +198,5 @@ These are external projects.
 
 ## Next step
 
-- [Heat pump bridge](heat-pump.md)
+- [Heat pump controller](heat-pump.md)
 - [Back to the repository README](../README.md)

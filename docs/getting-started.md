@@ -14,15 +14,15 @@ Terms marked with a link, such as [ESPHome](#esphome), are defined in the
 - Python 3, with the version range given in
   [Set up the project](#set-up-the-project).
 - Git, to download this repository.
-- A micro-USB data cable (power-only cables do not work) for the first flash
-  of each board.
+- A USB data cable (power-only cables do not work) for the first flash of
+  each board: USB-C for the heat pump controller, micro-USB for the AcuRite
+  board.
 - A [Home Assistant](#home-assistant) installation on the same network as
   your devices. See the
   [Home Assistant installation guide](https://www.home-assistant.io/installation/).
-- A 2.4 GHz Wi-Fi network. Both boards in this repository are ESP32 chips,
-  and the
-  [ESPHome ESP32 page](https://esphome.io/components/esp32/) lists the
-  ESP32-C3 Wi-Fi band as 2.4 GHz.
+- A 2.4 GHz Wi-Fi network. Both boards in this repository are ESP32 chips
+  with 2.4 GHz Wi-Fi. See the
+  [ESPHome ESP32 page](https://esphome.io/components/esp32/).
 
 ## Set up the project
 
@@ -52,8 +52,8 @@ Open `secrets.yaml` in a text editor and replace every value. Each device
 config reads its passwords and keys from this file through `!secret`.
 
 - `wifi_ssid`, `wifi_password`: used by all devices. Your Wi-Fi name and password.
-- `heatpump_api_encryption_key`: used by heat pump bridges. Generated, see below.
-- `heatpump_ota_password`, `heatpump_ap_password`: used by heat pump bridges. Generated, see below.
+- `heatpump_api_encryption_key`: used by heat pump controllers. Generated, see below.
+- `heatpump_ota_password`, `heatpump_ap_password`: used by heat pump controllers. Generated, see below.
 - `acurite_api_encryption_key`: used by AcuRite bridge. Generated, see below.
 - `acurite_ota_password`, `acurite_ap_password`: used by AcuRite bridge. Generated, see below.
 
@@ -72,7 +72,7 @@ LC_ALL=C tr -dc A-Za-z0-9 < /dev/urandom | head -c 20; echo
 ```
 
 Paste each output into `secrets.yaml`, one value per key. All heat pump
-bridges share one set of three keys. For a device that is already in Home
+controllers share one set of three keys. For a device that is already in Home
 Assistant, keep its existing API encryption key, or enter the new key again
 in Home Assistant. To rotate a value, generate a new one and flash the
 device again. A changed OTA password may need a USB flash
@@ -110,9 +110,9 @@ GPIO5 is a strapping pin.
 The first flash of each board goes over USB. Later updates go over Wi-Fi
 ([OTA](#ota)).
 
-1. Read the power rule in your device guide first. The heat pump bridge must
-   have CN105 unplugged while micro-USB is connected.
-2. Plug the board into your computer with the micro-USB cable.
+1. Read the power rule in your device guide first. The heat pump controller
+   must have its CN105 cable disconnected while USB is connected.
+2. Plug the board into your computer with the USB cable.
 3. Run this in a laptop terminal, from the repository root. Replace the file
    name with your device file:
 
@@ -171,7 +171,7 @@ guides say what to expect.
 
 ## Next step
 
-- [Heat pump bridge](heat-pump.md)
+- [Heat pump controller](heat-pump.md)
 - [AcuRite bridge](acurite.md)
 
 ## Glossary
@@ -195,23 +195,10 @@ indoor heat pump units. It carries power and a serial data link. The
 [MitsubishiCN105ESPHome README](https://github.com/echavet/MitsubishiCN105ESPHome)
 lists compatible units.
 
-### Logic-level converter
-
-A small board that joins two circuits running at different signal voltages.
-The CN105 data lines run at 5 V and the ESP32 pins at 3.3 V, so the heat pump
-bridge puts a converter between them.
-
 ### OTA
 
 Over the air: sending new firmware to a device over Wi-Fi instead of a USB
 cable. It works after the first USB flash.
-
-### Strapping pin
-
-A chip pin whose voltage at power-up selects the boot mode. On the ESP32-C3
-these are GPIO2, GPIO8 and GPIO9, per the
-[Espressif DevKitM-1 user guide](https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32c3/esp32-c3-devkitm-1/user_guide.html).
-The heat pump bridge avoids them.
 
 ### Baud rate
 
