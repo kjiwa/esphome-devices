@@ -49,7 +49,10 @@ cp secrets.example.yaml secrets.yaml
 ## Fill in the secrets
 
 Open `secrets.yaml` in a text editor and replace every value. Each device
-config reads its passwords and keys from this file through `!secret`.
+config reads its passwords and keys from this file through `!secret`. Edit the
+existing lines instead of adding new ones: the example Wi-Fi values pass the
+config check, but a device flashed with them cannot join your network and
+starts its fallback hotspot.
 
 - `wifi_ssid`, `wifi_password`: used by all devices. Your Wi-Fi name and password.
 - `heatpump_api_encryption_key`: used by heat pump controllers. Generated, see below.

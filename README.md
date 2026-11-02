@@ -13,7 +13,7 @@ port, a Serin controller and Wi-Fi to Home Assistant.
 ## Devices
 
 - **Mitsubishi heat pump controller**: Serin controllers ordered, not yet installed. [Heat pump controller](docs/heat-pump.md)
-- **AcuRite 433 MHz sensor bridge**: in daily use; this repository's config not yet flashed to the live unit. [AcuRite bridge](docs/acurite.md)
+- **AcuRite 433 MHz sensor bridge**: in daily use, running this repository's config. [AcuRite bridge](docs/acurite.md)
 
 ## Quick start
 
