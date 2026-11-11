@@ -70,14 +70,26 @@ climate:
     input_power_sensor:
       name: Input power
       entity_category: diagnostic
+    kwh_sensor:
+      name: Energy
+      entity_category: diagnostic
     runtime_hours_sensor:
       name: Runtime hours
       entity_category: diagnostic
     stage_sensor:
       name: Stage
       entity_category: diagnostic
+    sub_mode_sensor:
+      name: Sub mode
+      entity_category: diagnostic
+    error_code_sensor:
+      name: Error code
+      entity_category: diagnostic
     isee_sensor:
       name: ISEE
+      entity_category: diagnostic
+    remote_temperature_control_sensor:
+      name: Room thermometer in use
       entity_category: diagnostic
 
 switch:
