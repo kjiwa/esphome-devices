@@ -57,6 +57,34 @@ climate:
     name: None
     update_interval: 2s
     remote_temperature_timeout: 10min
+    compressor_frequency_sensor:
+      name: Compressor frequency
+      entity_category: diagnostic
+    outside_air_temperature_sensor:
+      name: Outside air temperature
+      entity_category: diagnostic
+    input_power_sensor:
+      name: Input power
+      entity_category: diagnostic
+    runtime_hours_sensor:
+      name: Runtime hours
+      entity_category: diagnostic
+    stage_sensor:
+      name: Stage
+      entity_category: diagnostic
+    isee_sensor:
+      name: ISEE
+      entity_category: diagnostic
+
+switch:
+  - platform: template
+    name: Room thermometer
+    id: use_room_temperature
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+    on_turn_off:
+      - lambda: id(hp).set_remote_temperature(0);
 
 sensor:
   - platform: uptime
@@ -79,14 +107,15 @@ sensor:
           return (c < 1 || c > 40) ? NAN : c;
 
 # Each send resets the firmware's remote_temperature_timeout. Sending stops when
-# Home Assistant is disconnected or the entity is unknown, and the unit then
-# falls back to its own sensor.
+# the switch is off, Home Assistant is disconnected or the entity is unknown,
+# and the unit then falls back to its own sensor.
 interval:
   - interval: 1min
     then:
       - if:
           condition:
             and:
+              - switch.is_on: use_room_temperature
               - api.connected:
               - lambda: return !std::isnan(id(room_temperature).state);
           then:
