@@ -16,7 +16,7 @@
 <text x="224" y="217" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">wired, Grove connector</text>
 <rect x="30" y="236" width="360" height="64" rx="6" fill="#e3f0fb" stroke="#0b4f8a" stroke-width="2"/>
 <text x="210" y="264" font-size="18" text-anchor="middle" font-weight="bold" fill="#111111">Serin controller</text>
-<text x="210" y="286" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">ESP32-S3 running the ESPHome firmware</text>
+<text x="210" y="286" font-size="14" text-anchor="middle" font-weight="normal" fill="#111111">ESP32-C6 running the ESPHome firmware</text>
 <path d="M210 302 L210 346" fill="none" stroke="#0b4f8a" stroke-width="3" stroke-dasharray="8 6"/>
 <polygon points="210,346 204.0,335 216.0,335" fill="#0b4f8a"/>
 <text x="224" y="329" font-size="14" text-anchor="start" font-weight="normal" fill="#111111">wireless (dashed)</text>

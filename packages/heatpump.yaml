@@ -1,6 +1,6 @@
 substitutions:
   friendly_name: Heat Pump
-  board: esp32-s3-devkitc-1
+  board: esp32-c6-devkitm-1
   uart_rx_pin: GPIO2
   uart_tx_pin: GPIO1
 
@@ -11,9 +11,12 @@ esphome:
 
 esp32:
   board: ${board}
-  flash_size: 8MB
+  variant: esp32c6
+  flash_size: 4MB
   framework:
     type: esp-idf
+    sdkconfig_options:
+      CONFIG_ESPTOOLPY_FLASHSIZE_4MB: y
 
 logger:
   level: INFO
@@ -57,6 +60,7 @@ climate:
     name: None
     update_interval: 2s
     remote_temperature_timeout: 10min
+    fahrenheit_compatibility: standard
     compressor_frequency_sensor:
       name: Compressor frequency
       entity_category: diagnostic

@@ -48,7 +48,7 @@ technician. Connecting third-party hardware may affect your warranty
 
 ## Parts
 
-- **[Serin Labs CN105 ESP32 Controller](https://serin-labs.com/controller.html)**: quantity 1 per unit. It ships with a CN105-to-Grove cable, in 20 cm or 50 cm. Serin recommends 20 cm for wall units and cassettes, where the board tucks inside, and 50 cm for metal-bodied ducted air handlers. It ships unflashed. The board should be an ESP32-S3 (an M5Stack AtomS3 Lite, inferred from Serin's board file; confirm when it arrives), which this repository's config targets. Serin's repo also has a board file for an ESP32-C6; if that board arrives, change the `board`, `flash_size` and pin settings in `packages/heatpump.yaml` to the values in its [ESP32-C6 board file](https://github.com/serin-labs/serin-cn105/blob/main/esphome/common/esp32c6.yaml).
+- **[Serin Labs CN105 ESP32 Controller](https://serin-labs.com/controller.html)**: quantity 1 per unit. It ships with a CN105-to-Grove cable, in 20 cm or 50 cm. Serin recommends 20 cm for wall units and cassettes, where the board tucks inside, and 50 cm for metal-bodied ducted air handlers. It ships unflashed. The board is an M5Stack NanoC6 (ESP32-C6), which this repository's config targets with the board, flash and framework settings from Serin's [ESP32-C6 board file](https://github.com/serin-labs/serin-cn105/blob/main/esphome/common/esp32c6.yaml).
 - **A USB-C data cable**: for flashing. Power-only cables do not work.
 
 The cable has no level shifting. The CN105 data lines run at 5 V and the
