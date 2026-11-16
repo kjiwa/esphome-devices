@@ -11,10 +11,12 @@ to Home Assistant over Wi-Fi.
 
 ## Status and audience
 
-Status: ordered, not yet installed. Nothing in this guide is a field report.
-The firmware component is third-party and its authors tested it; see
-[Supported units](#supported-units). The room thermometer feed compiles but has
-not run on a heat pump.
+Status: installed in three units on one outdoor unit and running. Measured
+there: the log reports `Cycle ended in 1.0 seconds` with no timeout at
+`update_interval: 2s`, and the Wi-Fi signal reads -51 to -79 dBm with the cover
+on. The room thermometer feed has run on one unit, including the fall back to
+the unit's own sensor when Home Assistant stopped. The firmware component is
+third-party; see [Supported units](#supported-units).
 
 This guide is for someone comfortable opening an indoor unit's cover. You do
 not need to have used ESPHome before. Read [Getting started](getting-started.md)
@@ -31,7 +33,10 @@ and not every unit supports every feature.
 
 Where CN105 sits on the indoor unit's circuit board varies by model. Check
 your unit's service documentation or the model list the README links. This
-repository has not verified any specific model.
+repository has run on two MSZ-GS09NA units and one MSZ-12NA unit. On the
+12NA the firmware's Function Settings option (`hardware_settings`, not
+configured here) read zero for every code, so the unit does not support it. The compressor frequency and ISEE sensors never
+reported a value on these units, so the config leaves them out.
 
 ## Safety
 
@@ -126,9 +131,15 @@ A working controller shows these:
 - A climate entity named after the device, for example "Heat Pump (Living
   Room)". The firmware authors say you should be able to change modes and
   temperature setpoints from it.
-- An Uptime sensor and a Wi-Fi signal sensor on the same device. Read the
-  signal with the cover on and with it off. If the signal drops out with the
-  cover on, reposition the controller inside the cavity.
+- Diagnostic sensors on the same device: Uptime, Wi-Fi signal, Outside air
+  temperature, Input power, Energy, Runtime hours, Stage, Sub mode and Error
+  code. Each unit's Input power and Energy are its own, not the whole outdoor
+  unit's. Error code read `Error 0x80 sub 0x00` on all three units with
+  nothing wrong; its meaning is unverified.
+- A Room thermometer switch and a Room thermometer in use sensor; see
+  [Use a room thermometer](#use-a-room-thermometer).
+- A Wi-Fi signal that holds with the cover on and with it off. If it drops out
+  with the cover on, reposition the controller inside the cavity.
 - With the log open (run this in a laptop terminal), lines like
   `Cycle ended in 1.2 seconds (with timeout?: NO)`:
 
@@ -156,46 +167,71 @@ terminal:
 ## Use a room thermometer
 
 The heat pump regulates to its own sensor, which sits in the indoor unit and
-can read warmer or cooler than the room. The firmware can take a temperature
-from Home Assistant instead, so the number on the remote means the temperature
-a room thermometer reads. Home Assistant only supplies a reading. Mode,
-setpoint, fan and power stay with the remote.
+reads a few degrees off the room: on the installed units it read 3.3 to 4.7 °F
+below a wall thermometer. The firmware can take a temperature from Home
+Assistant instead, so the number on the remote means the temperature a room
+thermometer reads. Home Assistant only supplies a reading. Mode, setpoint, fan
+and power stay with the remote.
 
-1. In Home Assistant, create a template sensor helper per room (Settings,
-   Devices & services, Helpers) named after the entity in the room's device
-   file, for example `sensor.heatpump_livingroom_room_temperature`. Set its
-   unit to °F and its device class to temperature. Use this state template,
-   with your thermometer's entity and the longest gap you accept in hours:
+1. In Home Assistant, add a template sensor named after the entity in the
+   room's device file (`room_temperature_entity`), here for a living room,
+   with your thermometer's entity and the longest gap you accept:
 
-   ```jinja
-   {% set s = states.sensor.living_room_temperature %}
-   {{ s.state if s and now() - s.last_reported < timedelta(hours=3) else none }}
+   ```yaml
+   template:
+     - sensor:
+         - name: Heatpump Livingroom Room Temperature
+           unique_id: heatpump_livingroom_room_temperature
+           device_class: temperature
+           state_class: measurement
+           unit_of_measurement: °F
+           state: "{{ states('sensor.living_room_temperature') }}"
+           availability: >-
+             {{ has_value('sensor.living_room_temperature')
+                and now() - states.sensor.living_room_temperature.last_reported
+                    < timedelta(hours=3) }}
    ```
 
 2. Flash the device again over Wi-Fi, as in
    [Tune the update interval](#tune-the-update-interval).
+3. Switch Room thermometer on and set the remote to the temperature you want
+   in the same minute. The switch is off after a flash until you turn it on,
+   and it keeps its state across restarts. Switching it off returns the unit
+   to its own sensor at once. Room thermometer in use turns on when the unit
+   confirms it follows the feed.
 
-The helper reports a non-numeric state when the thermometer is unavailable or
-stops reporting, and the device sends nothing for such a state or for a
-reading outside 1 to 40 °C. The unit returns to its own sensor, so the remote
-keeps working, in these cases:
+The device sends a reading once a minute, and nothing for a non-numeric state
+or a reading outside 1 to 40 °C. In each case below the unit falls back to its
+own sensor and the remote keeps working. Switching Room thermometer off is
+immediate. The other cases wait for the 10 minute timeout:
 
-- The thermometer is offline or its reading is out of range: the helper is
-  non-numeric, the device stops sending and the firmware times out after 10
-  minutes.
-- Home Assistant or Wi-Fi is down: the device stops sending, with the same
-  timeout.
-- The ESP32 is down: the unit receives no updates and reverts by itself
-  (a firmware source comment says so; unverified on hardware).
+```mermaid
+flowchart TD
+  sw{"Room thermometer on?"}
+  ha{"Controller connected to Home Assistant?"}
+  fresh{"Thermometer reported recently, reading in range?"}
+  own["Unit uses its own sensor"]
+  feed["Unit regulates to the thermometer"]
+  sw -- no --> own
+  sw -- yes --> ha
+  ha -- no --> own
+  ha -- yes --> fresh
+  fresh -- no --> own
+  fresh -- yes --> feed
+```
+
+Separately, if the ESP32 itself is down the unit receives no updates and
+reverts by itself (a firmware source comment says so; unverified on
+hardware). A client such as `esphome logs` counts as a connection to Home
+Assistant, so a fall back test needs the log closed.
 
 Home Assistant is assumed to use °F. For °C, change `(x - 32) * (5.0 / 9.0)`
 to `x` in [`packages/heatpump.yaml`](../packages/heatpump.yaml).
 
 ## Troubleshooting
 
-The controller has not been installed yet. These entries come from the
-firmware's documentation and from reading the configuration, so treat them
-as expected behavior, not field reports.
+These entries come from the firmware's documentation and from reading the
+configuration, except where the text reports a measurement.
 
 ### Device not in Home Assistant
 

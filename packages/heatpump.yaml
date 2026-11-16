@@ -61,9 +61,6 @@ climate:
     update_interval: 2s
     remote_temperature_timeout: 10min
     fahrenheit_compatibility: standard
-    compressor_frequency_sensor:
-      name: Compressor frequency
-      entity_category: diagnostic
     outside_air_temperature_sensor:
       name: Outside air temperature
       entity_category: diagnostic
@@ -84,9 +81,6 @@ climate:
       entity_category: diagnostic
     error_code_sensor:
       name: Error code
-      entity_category: diagnostic
-    isee_sensor:
-      name: ISEE
       entity_category: diagnostic
     remote_temperature_control_sensor:
       name: Room thermometer in use
