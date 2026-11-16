@@ -33,10 +33,11 @@ and not every unit supports every feature.
 
 Where CN105 sits on the indoor unit's circuit board varies by model. Check
 your unit's service documentation or the model list the README links. This
-repository has run on two MSZ-GS09NA units and one MSZ-12NA unit. On the
-12NA the firmware's Function Settings option (`hardware_settings`, not
-configured here) read zero for every code, so the unit does not support it. The compressor frequency and ISEE sensors never
-reported a value on these units, so the config leaves them out.
+repository has run on two MSZ-GS09NA units and one MSZ-GL12NA unit. On the
+GL12NA the firmware's Function Settings option (`hardware_settings`, not
+configured here) read zero for every code, so the unit does not support it.
+The compressor frequency and ISEE sensors never reported a value on these
+units, so the config leaves them out.
 
 ## Safety
 
