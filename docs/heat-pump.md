@@ -34,8 +34,8 @@ and not every unit supports every feature.
 Where CN105 sits on the indoor unit's circuit board varies by model. Check
 your unit's service documentation or the model list the README links. This
 repository has run on two MSZ-GS09NA units and one MSZ-12NA unit. On the
-12NA the Function Settings (`hardware_settings`) read zero over CN105, so they
-are not supported there. The compressor frequency and ISEE sensors never
+12NA the firmware's Function Settings option (`hardware_settings`, not
+configured here) read zero for every code, so the unit does not support it. The compressor frequency and ISEE sensors never
 reported a value on these units, so the config leaves them out.
 
 ## Safety
@@ -201,9 +201,9 @@ and power stay with the remote.
    confirms it follows the feed.
 
 The device sends a reading once a minute, and nothing for a non-numeric state
-or a reading outside 1 to 40 °C. The unit falls back to its own sensor, so the
-remote keeps working, in every case below. The first four wait for the 10
-minute timeout:
+or a reading outside 1 to 40 °C. In each case below the unit falls back to its
+own sensor and the remote keeps working. Switching Room thermometer off is
+immediate. The other cases wait for the 10 minute timeout:
 
 ```mermaid
 flowchart TD
@@ -220,10 +220,10 @@ flowchart TD
   fresh -- yes --> feed
 ```
 
-If the ESP32 itself is down, the unit receives no updates and reverts by
-itself (a firmware source comment says so; unverified on hardware). A client
-such as `esphome logs` counts as a connection to Home Assistant, so a fall back
-test needs the log closed.
+Separately, if the ESP32 itself is down the unit receives no updates and
+reverts by itself (a firmware source comment says so; unverified on
+hardware). A client such as `esphome logs` counts as a connection to Home
+Assistant, so a fall back test needs the log closed.
 
 Home Assistant is assumed to use °F. For °C, change `(x - 32) * (5.0 / 9.0)`
 to `x` in [`packages/heatpump.yaml`](../packages/heatpump.yaml).
