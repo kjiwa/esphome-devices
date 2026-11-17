@@ -134,9 +134,12 @@ A working controller shows these:
   temperature setpoints from it.
 - Diagnostic sensors on the same device: Uptime, Wi-Fi signal, Outside air
   temperature, Input power, Energy, Runtime hours, Stage, Sub mode and Error
-  code. Each unit's Input power and Energy are its own, not the whole outdoor
-  unit's. Error code read `Error 0x80 sub 0x00` on all three units with
-  nothing wrong; its meaning is unverified.
+  code. On the three installed units (one outdoor unit), the living room's
+  Input power and Energy matched the whole outdoor unit's, and the other two
+  read about 3 W with a flat Energy counter while heating, measured over a day
+  with all three rooms heating at times. Error code read
+  `Error 0x80 sub 0x00` on all three units with nothing wrong; its meaning is
+  unverified.
 - A Room thermometer switch and a Room thermometer in use sensor; see
   [Use a room thermometer](#use-a-room-thermometer).
 - A Wi-Fi signal that holds with the cover on and with it off. If it drops out
@@ -176,7 +179,8 @@ and power stay with the remote.
 
 1. In Home Assistant, add a template sensor named after the entity in the
    room's device file (`room_temperature_entity`), here for a living room,
-   with your thermometer's entity and the longest gap you accept:
+   with your thermometer's entity and the longest gap you accept (a Shelly
+   H&T reports about every 4 hours when its reading is unchanged, so 5 here):
 
    ```yaml
    template:
@@ -190,7 +194,7 @@ and power stay with the remote.
            availability: >-
              {{ has_value('sensor.living_room_temperature')
                 and now() - states.sensor.living_room_temperature.last_reported
-                    < timedelta(hours=3) }}
+                    < timedelta(hours=5) }}
    ```
 
 2. Flash the device again over Wi-Fi, as in
