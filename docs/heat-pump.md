@@ -134,9 +134,11 @@ A working controller shows these:
   temperature setpoints from it.
 - Diagnostic sensors on the same device: Uptime, Wi-Fi signal, Outside air
   temperature, Input power, Energy, Runtime hours, Stage, Sub mode and Error
-  code. Each unit's Input power and Energy are its own, not the whole outdoor
-  unit's. Error code read `Error 0x80 sub 0x00` on all three units with
-  nothing wrong; its meaning is unverified.
+  code. On one outdoor unit serving three indoor units, the living room's
+  Input power and Energy are the whole outdoor unit's, and the other two read
+  about 3 W with a flat Energy counter even while heating. Error code read
+  `Error 0x80 sub 0x00` on all three units with nothing wrong; its meaning is
+  unverified.
 - A Room thermometer switch and a Room thermometer in use sensor; see
   [Use a room thermometer](#use-a-room-thermometer).
 - A Wi-Fi signal that holds with the cover on and with it off. If it drops out
@@ -190,7 +192,7 @@ and power stay with the remote.
            availability: >-
              {{ has_value('sensor.living_room_temperature')
                 and now() - states.sensor.living_room_temperature.last_reported
-                    < timedelta(hours=3) }}
+                    < timedelta(hours=5) }}
    ```
 
 2. Flash the device again over Wi-Fi, as in
