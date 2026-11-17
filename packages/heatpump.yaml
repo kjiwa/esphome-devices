@@ -3,6 +3,8 @@ substitutions:
   board: esp32-c6-devkitm-1
   uart_rx_pin: GPIO2
   uart_tx_pin: GPIO1
+  guard_overrun_f: "2"
+  guard_min_time_ms: "1200000"
 
 esphome:
   name: ${name}
@@ -96,6 +98,23 @@ switch:
     on_turn_off:
       - lambda: id(hp).set_remote_temperature(0);
 
+  - platform: template
+    name: Overshoot guard
+    id: overshoot_guard
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    entity_category: config
+
+globals:
+  - id: guard_holding
+    type: bool
+    restore_value: true
+    initial_value: "false"
+
+  - id: guard_changed_at
+    type: uint32_t
+    initial_value: "0"
+
 sensor:
   - platform: uptime
     name: Uptime
@@ -130,3 +149,41 @@ interval:
               - lambda: return !std::isnan(id(room_temperature).state);
           then:
             - lambda: id(hp).set_remote_temperature(id(room_temperature).state);
+
+  - interval: 1min
+    then:
+      - lambda: |-
+          auto set_mode = [](climate::ClimateMode mode) {
+            id(hp).make_call().set_mode(mode).perform();
+          };
+          float room_c = id(room_temperature).state;
+          bool reading_valid = !std::isnan(room_c);
+          bool guard_enabled = id(overshoot_guard).state && id(use_room_temperature).state &&
+                               global_api_server->is_connected() && reading_valid;
+          bool min_time_passed = millis() - id(guard_changed_at) >= ${guard_min_time_ms};
+          float room_f = room_c * 9.0 / 5.0 + 32;
+          float setpoint_f = std::round(id(hp).target_temperature * 9.0 / 5.0 + 32);
+          bool is_off = id(hp).mode == climate::CLIMATE_MODE_OFF;
+
+          static bool first_run = true;
+          bool just_booted = first_run;
+          first_run = false;
+
+          if (id(guard_holding) && ((!guard_enabled && is_off) || just_booted)) {
+            // A bedroom head left Off has no backstop, so release at once.
+            set_mode(climate::CLIMATE_MODE_HEAT);
+            id(guard_holding) = false;
+            id(guard_changed_at) = millis();
+          } else if (id(guard_holding) && !is_off) {
+            id(guard_holding) = false;
+            id(guard_changed_at) = millis();
+          } else if (id(guard_holding) && room_f <= setpoint_f + 0.1 && min_time_passed) {
+            set_mode(climate::CLIMATE_MODE_HEAT);
+            id(guard_holding) = false;
+            id(guard_changed_at) = millis();
+          } else if (!id(guard_holding) && guard_enabled && id(hp).mode == climate::CLIMATE_MODE_HEAT &&
+                     room_f >= setpoint_f + ${guard_overrun_f} - 0.1 && min_time_passed) {
+            set_mode(climate::CLIMATE_MODE_OFF);
+            id(guard_holding) = true;
+            id(guard_changed_at) = millis();
+          }
