@@ -5,6 +5,11 @@ substitutions:
   uart_tx_pin: GPIO1
   guard_overrun_f: "2"
   guard_min_time_ms: "1200000"
+  fallback_ms: "600000"
+  sample_minutes: "60"
+  sample_fresh_ms: "900000"
+  gap_learn_rate: "0.2"
+  gap_drift_limit_f: "1.5"
 
 esphome:
   name: ${name}
@@ -24,6 +29,9 @@ logger:
   level: INFO
 
 api:
+  # The default 15 min reboot without a client would reset the fallback clock
+  # and the outage sample during a Home Assistant outage.
+  reboot_timeout: 0s
   encryption:
     key: !secret heatpump_api_encryption_key
 
@@ -61,7 +69,7 @@ climate:
     id: hp
     name: None
     update_interval: 2s
-    remote_temperature_timeout: 10min
+    remote_temperature_timeout: ${fallback_ms}ms
     fahrenheit_compatibility: standard
     outside_air_temperature_sensor:
       name: Outside air temperature
@@ -97,6 +105,7 @@ switch:
     entity_category: config
     on_turn_off:
       - lambda: id(hp).set_remote_temperature(0);
+      - script.execute: sync_setpoint
 
   - platform: template
     name: Overshoot guard
@@ -113,6 +122,42 @@ globals:
 
   - id: guard_changed_at
     type: uint32_t
+    initial_value: "0"
+
+  # The setpoint the user chose, in whole Fahrenheit degrees. The unit's target
+  # is this value, shifted by the learned gap while it runs on its own sensor.
+  - id: intent_setpoint_f
+    type: float
+    restore_value: true
+    initial_value: NAN
+
+  # The target last seen on or written to the unit. A target that differs from
+  # it was set by a remote or Home Assistant and becomes the new intent.
+  - id: written_target_f
+    type: float
+    restore_value: true
+    initial_value: NAN
+
+  # The heat-mode difference, own sensor minus room thermometer, in Fahrenheit.
+  - id: learned_gap_heat_f
+    type: float
+    restore_value: true
+    initial_value: ${heat_gap_f}
+
+  - id: last_send_ms
+    type: uint32_t
+    initial_value: "0"
+
+  - id: room_changed_at
+    type: uint32_t
+    initial_value: "0"
+
+  # Own-sensor readings, one per minute, from the last sample_minutes of an outage.
+  - id: outage_readings_f
+    type: float[${sample_minutes}]
+
+  - id: outage_reading_count
+    type: int
     initial_value: "0"
 
 sensor:
@@ -134,10 +179,67 @@ sensor:
       - lambda: |-
           float c = (x - 32) * (5.0 / 9.0);
           return (c < 1 || c > 40) ? NAN : c;
+    # An unchanged value is a stale resend, not a fresh reading.
+    on_value:
+      - lambda: |-
+          static float last_c = NAN;
+          if (!std::isnan(x)) {
+            if (x != last_c) id(room_changed_at) = millis();
+            last_c = x;
+          }
+
+  - platform: template
+    name: Remote setpoint
+    entity_category: diagnostic
+    device_class: temperature
+    unit_of_measurement: "°F"
+    accuracy_decimals: 0
+    update_interval: 60s
+    lambda: return id(intent_setpoint_f);
+
+  - platform: template
+    name: Heat gap
+    entity_category: diagnostic
+    unit_of_measurement: "°F"
+    accuracy_decimals: 1
+    update_interval: 60s
+    lambda: return id(learned_gap_heat_f);
+
+# Runs on the unit's own sensor after fallback_ms without a send. In Heat the
+# target then drops by the learned gap, because the own sensor reads that far
+# below the room. Outside Heat nothing is shifted and the target is not tracked.
+# Turning the Room thermometer switch off restores the target and stops shifting.
+script:
+  - id: sync_setpoint
+    mode: single
+    then:
+      - lambda: |-
+          if (id(hp).mode != climate::CLIMATE_MODE_HEAT) return;
+          float observed_f = std::round(id(hp).target_temperature * 9.0 / 5.0 + 32);
+          if (std::isnan(observed_f)) return;
+          if (std::isnan(id(intent_setpoint_f)) || observed_f != id(written_target_f)) {
+            id(intent_setpoint_f) = observed_f;
+            id(written_target_f) = observed_f;
+            id(outage_reading_count) = 0;
+          }
+      - lambda: |-
+          if (id(hp).mode != climate::CLIMATE_MODE_HEAT || std::isnan(id(intent_setpoint_f))) return;
+          bool shifted = id(use_room_temperature).state &&
+                         millis() - id(last_send_ms) >= ${fallback_ms};
+          // The unit accepts 61 F and above.
+          float target_f = shifted ? std::max(61.0f, std::round(id(intent_setpoint_f) + id(learned_gap_heat_f)))
+                                   : id(intent_setpoint_f);
+          if (target_f == id(written_target_f)) return;
+          id(hp).make_call().set_target_temperature((target_f - 32) / 1.8f).perform();
+          id(written_target_f) = target_f;
 
 # Each send resets the firmware's remote_temperature_timeout. Sending stops when
 # the switch is off, Home Assistant is disconnected or the entity is unknown,
 # and the unit then falls back to its own sensor.
+#
+# The first send after an outage, with a full hour of own-sensor readings and a
+# fresh room reading, moves the learned gap a fraction of the way toward the
+# measured difference, within gap_drift_limit_f of the configured heat_gap_f.
 interval:
   - interval: 1min
     then:
@@ -148,7 +250,36 @@ interval:
               - api.connected:
               - lambda: return !std::isnan(id(room_temperature).state);
           then:
-            - lambda: id(hp).set_remote_temperature(id(room_temperature).state);
+            - lambda: |-
+                bool was_in_outage = millis() - id(last_send_ms) >= ${fallback_ms};
+                bool room_fresh = millis() - id(room_changed_at) <= ${sample_fresh_ms};
+                if (!was_in_outage || !room_fresh || id(outage_reading_count) < ${sample_minutes}) return;
+                float sum_f = 0;
+                for (float reading_f : id(outage_readings_f)) sum_f += reading_f;
+                float room_f = id(room_temperature).state * 9.0 / 5.0 + 32;
+                float sample_f = sum_f / ${sample_minutes} - room_f;
+                float learned_f = id(learned_gap_heat_f) + ${gap_learn_rate} * (sample_f - id(learned_gap_heat_f));
+                float low_f = ${heat_gap_f} - ${gap_drift_limit_f};
+                float high_f = ${heat_gap_f} + ${gap_drift_limit_f};
+                id(learned_gap_heat_f) = std::min(std::max(learned_f, low_f), high_f);
+            - lambda: |-
+                id(hp).set_remote_temperature(id(room_temperature).state);
+                id(last_send_ms) = millis();
+
+  - interval: 1min
+    then:
+      - script.execute: sync_setpoint
+      - lambda: |-
+          bool sampling = id(hp).mode == climate::CLIMATE_MODE_HEAT && id(use_room_temperature).state &&
+                          !std::isnan(id(hp).current_temperature) &&
+                          millis() - id(last_send_ms) >= ${fallback_ms} + ${sample_minutes} * 60000UL;
+          if (!sampling) {
+            id(outage_reading_count) = 0;
+            return;
+          }
+          float own_f = id(hp).current_temperature * 9.0 / 5.0 + 32;
+          id(outage_readings_f)[id(outage_reading_count) % ${sample_minutes}] = own_f;
+          id(outage_reading_count)++;
 
   - interval: 1min
     then:
@@ -162,7 +293,9 @@ interval:
                                global_api_server->is_connected() && reading_valid;
           bool min_time_passed = millis() - id(guard_changed_at) >= ${guard_min_time_ms};
           float room_f = room_c * 9.0 / 5.0 + 32;
-          float setpoint_f = std::round(id(hp).target_temperature * 9.0 / 5.0 + 32);
+          float setpoint_f = std::isnan(id(intent_setpoint_f))
+                                 ? std::round(id(hp).target_temperature * 9.0 / 5.0 + 32)
+                                 : id(intent_setpoint_f);
           bool is_off = id(hp).mode == climate::CLIMATE_MODE_OFF;
 
           static bool first_run = true;

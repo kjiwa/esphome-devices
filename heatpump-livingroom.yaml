@@ -6,3 +6,4 @@ packages:
       name: heatpump-livingroom
       area: Living Room
       room_temperature_entity: sensor.heatpump_livingroom_room_temperature
+      heat_gap_f: "-4.7"
