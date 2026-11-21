@@ -6,3 +6,4 @@ packages:
       name: heatpump-masterbedroom
       area: Master Bedroom
       room_temperature_entity: sensor.heatpump_masterbedroom_room_temperature
+      heat_gap_f: "-3.0"

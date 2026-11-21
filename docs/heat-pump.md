@@ -140,7 +140,8 @@ A working controller shows these:
   with all three rooms heating at times. Error code read
   `Error 0x80 sub 0x00` on all three units with nothing wrong; its meaning is
   unverified.
-- A Room thermometer switch and a Room thermometer in use sensor; see
+- A Room thermometer switch, a Room thermometer in use sensor, and Remote
+  setpoint and Heat gap diagnostic sensors in °F; see
   [Use a room thermometer](#use-a-room-thermometer).
 - A Wi-Fi signal that holds with the cover on and with it off. If it drops out
   with the cover on, reposition the controller inside the cavity.
@@ -177,10 +178,32 @@ Assistant instead, so the number on the remote means the temperature a room
 thermometer reads. Home Assistant only supplies a reading. Setpoint and fan
 stay with the remote, and so does the mode except for the guard below.
 
+Ten minutes without a feed, the unit regulates to its own sensor. In Heat mode
+with Room thermometer on, the firmware then lowers the unit's target by the
+Heat gap, so the room holds the temperature the remote says, and restores the
+target when the feed returns. Cool and other modes are not shifted. The
+shifted target is whole °F, not below 61 °F (the lowest the unit accepts), and
+Home Assistant's climate entity shows it during the outage. The Remote
+setpoint sensor reports the setpoint you chose (the intent). A target change
+the firmware did not write, from the remote or Home Assistant, becomes the new
+intent. Switching Room thermometer off is a service mode: the target returns
+to the intent and is not shifted.
+
+Heat gap is the own sensor minus the room thermometer. It starts at
+`heat_gap_f` in the device file (living room -4.7 °F, kid's room -3.5 °F,
+master bedroom -3.0 °F), measured with the heads on their own sensors. After
+the first hour of an outage, each minute in Heat records the unit's own
+reading. On the first feed after an outage with a full hour of readings and a
+room reading that changed within 15 minutes, the mean of those readings minus
+the room reading is one sample. Heat gap moves 0.2 of the way toward it, and
+stays within 1.5 °F of `heat_gap_f`. A target change during the outage
+discards the readings. Heat gap survives a flash.
+
 The Overshoot guard switch (off by default, and only active while Room
 thermometer is on) stops a head that heats past the setpoint. In Heat mode,
-with the room reading at least 2 °F above the setpoint, the firmware turns the
-head off; at or below the setpoint it turns the head back to Heat. Each change
+with the room reading at least 2 °F above the Remote setpoint (the target
+itself when no intent is known yet), the firmware turns the
+head off; at or below that setpoint it turns the head back to Heat. Each change
 waits 20 minutes after the last one, and the guard cannot turn a head off in
 the first 20 minutes after a boot. Pressing a mode button on the remote while
 the head is held off wins, and the guard resumes after 20 minutes. An Off
