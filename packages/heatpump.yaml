@@ -29,6 +29,9 @@ logger:
   level: INFO
 
 api:
+  # The default 15 min reboot without a client would reset the fallback clock
+  # and the outage sample during a Home Assistant outage.
+  reboot_timeout: 0s
   encryption:
     key: !secret heatpump_api_encryption_key
 
