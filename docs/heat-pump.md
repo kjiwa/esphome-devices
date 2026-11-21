@@ -191,9 +191,9 @@ to the intent and is not shifted.
 
 Heat gap is the own sensor minus the room thermometer. It starts at
 `heat_gap_f` in the device file (living room -4.7 °F, kid's room -3.5 °F,
-master bedroom -3.0 °F), measured with the heads on their own sensors. After
-the first hour of an outage, each minute in Heat records the unit's own
-reading. On the first feed after an outage with a full hour of readings and a
+master bedroom -3.0 °F), measured with the heads on their own sensors. From
+70 minutes into an outage (the 10 minute fallback plus an hour for the room to
+settle), each minute in Heat records the unit's own reading. On the first feed after an outage with a full hour of readings and a
 room reading that changed within 15 minutes, the mean of those readings minus
 the room reading is one sample. Heat gap moves 0.2 of the way toward it, and
 stays within 1.5 °F of `heat_gap_f`. A target change during the outage
