@@ -172,11 +172,12 @@ terminal:
 ## Use a room thermometer
 
 The heat pump regulates to its own sensor, which sits in the indoor unit and
-reads a few degrees off the room: on the installed units it read 3.3 to 4.7 °F
-below a wall thermometer. The firmware can take a temperature from Home
-Assistant instead, so the number on the remote means the temperature a room
-thermometer reads. Home Assistant only supplies a reading. Setpoint and fan
-stay with the remote, and so does the mode except for the guard below.
+reads a few degrees off the room: on the installed units it read 3.0 to 4.7 °F
+below a wall thermometer on average, depending on the unit. The firmware can
+take a temperature from Home Assistant instead, so the number on the remote
+means the temperature a room thermometer reads. Home Assistant only supplies a
+reading. Setpoint and fan stay with the remote, and so does the mode except for
+the guard below.
 
 Ten minutes without a feed, the unit regulates to its own sensor. In Heat mode
 with Room thermometer on, the firmware then lowers the unit's target by the
@@ -204,16 +205,15 @@ thermometer is on) stops a head that heats past the setpoint. In Heat mode,
 with the room reading at least 2 °F above the Remote setpoint (the target
 itself when no intent is known yet), the firmware turns the
 head off; at or below that setpoint it turns the head back to Heat. Each change
-waits 20 minutes after the last one, and the guard cannot turn a head off in
-the first 20 minutes after a boot. Pressing a mode button on the remote while
-the head is held off wins, and the guard resumes after 20 minutes. An Off
-pressed on the remote during a hold cannot be told from the guard's own, so the
-guard turns the head back to Heat when the room reaches the setpoint. Within a
-minute of switching the guard off, losing the Home Assistant connection, an
-unavailable room reading or switching Room thermometer off, the head returns
-to Heat, so a bedroom is never left cold. A reboot while held Off does the same
-once the unit has been read; a mode other than Off set on the remote during the
-reboot is kept.
+waits 20 minutes after the last one and after a boot. Pressing a mode button on
+the remote while the head is held off wins, and the guard resumes after 20
+minutes. An Off pressed on the remote during a hold cannot be told from the
+guard's own, so the guard turns the head back to Heat when the room reaches the
+setpoint. Within a minute of switching the guard or Room thermometer off, and
+ten minutes after the room reading stops reaching the unit (Home Assistant
+disconnected or the reading unavailable) or after a boot without one, the head
+returns to Heat, so a bedroom is never left cold. A reboot while held keeps the hold, and a mode other than
+Off set on the remote during the reboot is kept.
 
 1. In Home Assistant, add a template sensor named after the entity in the
    room's device file (`room_temperature_entity`), here for a living room,

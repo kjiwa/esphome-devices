@@ -120,6 +120,7 @@ globals:
     restore_value: true
     initial_value: "false"
 
+  # Zero at boot, so the guard changes nothing in the first guard_min_time_ms.
   - id: guard_changed_at
     type: uint32_t
     initial_value: "0"
@@ -289,8 +290,9 @@ interval:
           };
           float room_c = id(room_temperature).state;
           bool reading_valid = !std::isnan(room_c);
-          bool guard_enabled = id(overshoot_guard).state && id(use_room_temperature).state &&
-                               global_api_server->is_connected() && reading_valid;
+          bool switches_on = id(overshoot_guard).state && id(use_room_temperature).state;
+          bool guard_enabled = switches_on && global_api_server->is_connected() && reading_valid;
+          bool feed_lost = millis() - id(last_send_ms) >= ${fallback_ms};
           bool min_time_passed = millis() - id(guard_changed_at) >= ${guard_min_time_ms};
           float room_f = room_c * 9.0 / 5.0 + 32;
           float setpoint_f = std::isnan(id(intent_setpoint_f))
@@ -302,12 +304,8 @@ interval:
           // reads as the default Off and a Heat command would carry the default 88 F.
           if (std::isnan(id(hp).target_temperature)) return;
 
-          static bool first_run = true;
-          bool just_booted = first_run;
-          first_run = false;
-
-          if (id(guard_holding) && is_off && (!guard_enabled || just_booted)) {
-            // A bedroom head left Off has no backstop, so release at once.
+          if (id(guard_holding) && is_off && (!switches_on || feed_lost)) {
+            // A bedroom head left Off has no backstop, so release it.
             set_mode(climate::CLIMATE_MODE_HEAT);
             id(guard_holding) = false;
             id(guard_changed_at) = millis();
