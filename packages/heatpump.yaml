@@ -298,11 +298,15 @@ interval:
                                  : id(intent_setpoint_f);
           bool is_off = id(hp).mode == climate::CLIMATE_MODE_OFF;
 
+          // The first tick runs at boot, before the unit has been read. Its mode then
+          // reads as the default Off and a Heat command would carry the default 88 F.
+          if (std::isnan(id(hp).target_temperature)) return;
+
           static bool first_run = true;
           bool just_booted = first_run;
           first_run = false;
 
-          if (id(guard_holding) && ((!guard_enabled && is_off) || just_booted)) {
+          if (id(guard_holding) && is_off && (!guard_enabled || just_booted)) {
             // A bedroom head left Off has no backstop, so release at once.
             set_mode(climate::CLIMATE_MODE_HEAT);
             id(guard_holding) = false;

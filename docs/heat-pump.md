@@ -211,7 +211,9 @@ pressed on the remote during a hold cannot be told from the guard's own, so the
 guard turns the head back to Heat when the room reaches the setpoint. Within a
 minute of switching the guard off, losing the Home Assistant connection, an
 unavailable room reading or switching Room thermometer off, the head returns
-to Heat, so a bedroom is never left cold. A reboot does the same.
+to Heat, so a bedroom is never left cold. A reboot while held Off does the same
+once the unit has been read; a mode other than Off set on the remote during the
+reboot is kept.
 
 1. In Home Assistant, add a template sensor named after the entity in the
    room's device file (`room_temperature_entity`), here for a living room,
