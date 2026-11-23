@@ -201,19 +201,27 @@ stays within 1.5 °F of `heat_gap_f`. A target change during the outage
 discards the readings. Heat gap survives a flash.
 
 The Overshoot guard switch (off by default, and only active while Room
-thermometer is on) stops a head that heats past the setpoint. In Heat mode,
-with the room reading at least 2 °F above the Remote setpoint (the target
-itself when no intent is known yet), the firmware turns the
-head off; at or below that setpoint it turns the head back to Heat. Each change
-waits 20 minutes after the last one and after a boot. Pressing a mode button on
-the remote while the head is held off wins, and the guard resumes after 20
-minutes. An Off pressed on the remote during a hold cannot be told from the
-guard's own, so the guard turns the head back to Heat when the room reaches the
-setpoint. Within a minute of switching the guard or Room thermometer off, and
-ten minutes after the room reading stops reaching the unit (Home Assistant
-disconnected or the reading unavailable) or after a boot without one, the head
-returns to Heat, so a bedroom is never left cold. A reboot while held keeps the hold, and a mode other than
-Off set on the remote during the reboot is kept.
+thermometer is on) stops a head that heats past the setpoint, the Remote
+setpoint (the target itself when no intent is known yet). It checks once a
+minute, and the 20 minutes below also count from a boot. A bedroom is never
+left cold: a hold ends in Heat unless the remote has set another mode.
+
+```mermaid
+stateDiagram-v2
+  direction LR
+  [*] --> Watching
+  Watching --> Holding: head in Heat, room 2#160;°F or more above setpoint,<br/>20 minutes since the last change<br/>send Off
+  Holding --> Watching: room at or below setpoint,<br/>20 minutes since the last change<br/>send Heat
+  Holding --> Watching: guard or Room thermometer off<br/>send Heat
+  Holding --> Watching: no feed for 10 minutes<br/>send Heat
+  Holding --> Watching: head no longer Off, so the remote won<br/>send nothing, start the 20 minutes
+```
+
+An Off pressed on the remote during a hold cannot be told from the guard's own,
+so the guard turns the head back to Heat when the room reaches the setpoint. No
+feed means Home Assistant disconnected, the reading unavailable, or a boot
+without one. A reboot while held keeps the hold, and a mode other than Off set
+on the remote during the reboot is kept.
 
 1. In Home Assistant, add a template sensor named after the entity in the
    room's device file (`room_temperature_entity`), here for a living room,
